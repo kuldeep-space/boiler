@@ -8,7 +8,7 @@ import { RoleSwitcher } from '../../components/layout/RoleSwitcher';
 import { useAppStore } from '../../lib/store';
 import { ClipboardList, ShieldCheck, CheckCircle2, Building2, MapPin, Calendar, FileText, Upload, ArrowRight } from 'lucide-react';
 
-export default function RequestQuotePage() {
+function RequestQuoteContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const productIdParam = searchParams.get('productId') || '';
@@ -379,5 +379,17 @@ export default function RequestQuotePage() {
 
       <Footer />
     </div>
+  );
+}
+
+export default function RequestQuotePage() {
+  return (
+    <React.Suspense fallback={
+      <div className="min-h-screen flex flex-col font-sans items-center justify-center" style={{ backgroundColor: '#eeebe3' }}>
+        <div className="text-slate-500 font-mono text-sm animate-pulse">Loading Quote Form...</div>
+      </div>
+    }>
+      <RequestQuoteContent />
+    </React.Suspense>
   );
 }

@@ -9,7 +9,7 @@ import { ProductCard } from '../../components/product/ProductCard';
 import { useAppStore } from '../../lib/store';
 import { Search, SlidersHorizontal, RefreshCw, Layers, ArrowRight } from 'lucide-react';
 
-export default function ProductCataloguePage() {
+function ProductCatalogueContent() {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get('cat') || '';
   const initialSearch = searchParams.get('q') || '';
@@ -339,5 +339,17 @@ export default function ProductCataloguePage() {
 
       <Footer />
     </div>
+  );
+}
+
+export default function ProductCataloguePage() {
+  return (
+    <React.Suspense fallback={
+      <div className="min-h-screen bg-[#eeebe3] flex flex-col font-sans items-center justify-center">
+        <div className="text-[#171e19] font-mono text-sm animate-pulse">Loading Catalogue...</div>
+      </div>
+    }>
+      <ProductCatalogueContent />
+    </React.Suspense>
   );
 }

@@ -8,7 +8,7 @@ import { RoleSwitcher } from '../../components/layout/RoleSwitcher';
 import { useAppStore } from '../../lib/store';
 import { ShieldCheck, CheckCircle2, Lock, Smartphone, CreditCard, Building2, AlertCircle } from 'lucide-react';
 
-export default function PaymentGatewaySimulatorPage() {
+function PaymentGatewayContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const orderIdParam = searchParams.get('orderId') || '';
@@ -184,5 +184,17 @@ export default function PaymentGatewaySimulatorPage() {
 
       <Footer />
     </div>
+  );
+}
+
+export default function PaymentGatewaySimulatorPage() {
+  return (
+    <React.Suspense fallback={
+      <div className="min-h-screen bg-slate-50 flex flex-col font-sans items-center justify-center">
+        <div className="text-slate-500 font-mono text-sm animate-pulse">Loading Payment Gateway...</div>
+      </div>
+    }>
+      <PaymentGatewayContent />
+    </React.Suspense>
   );
 }
