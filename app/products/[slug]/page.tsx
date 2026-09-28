@@ -210,61 +210,23 @@ export default function ProductDetailPage() {
                 )}
               </div>
 
-              {/* Quantity Selector for Direct Purchase */}
-              {product.mode === 'direct' && (
-                <div className="flex items-center gap-4 py-2">
-                  <label className="text-xs font-bold text-slate-700 uppercase">Quantity:</label>
-                  <div className="flex items-center border border-slate-300 rounded-lg overflow-hidden bg-slate-50">
-                    <button
-                      onClick={() => setSelectedQty(Math.max(1, selectedQty - 1))}
-                      className="px-3 py-1.5 text-slate-700 hover:bg-slate-200 font-bold"
-                    >
-                      -
-                    </button>
-                    <span className="px-4 py-1.5 font-bold text-slate-900 text-sm">{selectedQty}</span>
-                    <button
-                      onClick={() => setSelectedQty(selectedQty + 1)}
-                      className="px-3 py-1.5 text-slate-700 hover:bg-slate-200 font-bold"
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-              )}
+
             </div>
 
             {/* ACTION BUTTONS */}
             <div className="space-y-3 pt-4 border-t border-slate-200">
-              {product.mode === 'quote' ? (
-                <div className="space-y-2">
-                  <Link
-                    href={`/request-quote?productId=${product.id}`}
-                    className="w-full py-4 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm uppercase tracking-wider rounded-xl shadow-lg transition flex items-center justify-center gap-2"
-                  >
-                    <ClipboardList className="w-5 h-5" />
-                    Request Custom Quote (RFQ)
-                  </Link>
-                  <p className="text-[11px] text-slate-500 text-center">
-                    Submit your steam flow, working pressure & plant location for itemized quote within 4 hours.
-                  </p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <button
-                    onClick={() => addToCart(product, selectedQty)}
-                    className="w-full py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow transition flex items-center justify-center gap-2"
-                  >
-                    <ShoppingCart className="w-4 h-4" /> Add to Cart
-                  </button>
-
-                  <button
-                    onClick={handleBuyNow}
-                    className="w-full py-3.5 bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow transition flex items-center justify-center gap-2"
-                  >
-                    Buy Now
-                  </button>
-                </div>
-              )}
+              <div className="space-y-2">
+                <Link
+                  href={`/request-quote?productId=${product.id}`}
+                  className="w-full py-4 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm uppercase tracking-wider rounded-xl shadow-lg transition flex items-center justify-center gap-2"
+                >
+                  <ClipboardList className="w-5 h-5" />
+                  Request Custom Quote (RFQ)
+                </Link>
+                <p className="text-[11px] text-slate-500 text-center">
+                  Submit your steam flow, working pressure & plant location for itemized quote within 4 hours.
+                </p>
+              </div>
 
               {/* Direct Sales Assistance Hotline */}
               <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 flex items-center justify-between text-xs">

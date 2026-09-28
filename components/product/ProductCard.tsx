@@ -215,22 +215,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </Link>
 
           {/* Primary CTA Button: Red #ca0013 */}
-          {product.mode === 'quote' ? (
-            <Link
-              href={`/request-quote?productId=${product.id}`}
-              className="btn-primary flex items-center justify-center gap-1.5 py-2.5 text-xs font-extrabold"
-            >
-              Get Quote <ArrowRight className="w-3 h-3" />
-            </Link>
-          ) : (
-            <button
-              onClick={handleAddToCart}
-              className="btn-primary flex items-center justify-center gap-1.5 py-2.5 text-xs font-extrabold"
-            >
-              <ShoppingCart className="w-3.5 h-3.5" />
-              {cartPressed ? 'Added!' : 'Add to Cart'}
-            </button>
-          )}
+          <Link
+            href={`/request-quote?productId=${product.id}`}
+            className="btn-primary flex items-center justify-center gap-1.5 py-2.5 text-xs font-extrabold"
+          >
+            Get Quote <ArrowRight className="w-3 h-3" />
+          </Link>
         </div>
       </div>
     </div>
