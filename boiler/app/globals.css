@@ -1,0 +1,193 @@
+@import "tailwindcss";
+
+/* ============================================================
+   SOPHISTICATED PLAYFUL DESIGN SYSTEM — PANDEY JI IRON WORKS
+   Palette: Charcoal (#171e19), Red (#ca0013), Sage (#b7c6c2), Off-White (#eeebe3), White (#ffffff)
+   Typeface: Nunito
+   ============================================================ */
+
+@layer base {
+  :root {
+    /* Palette Tokens */
+    --color-bg: #eeebe3;
+    --color-charcoal: #171e19;
+    --color-red: #ca0013;
+    --color-sage: #b7c6c2;
+    --color-white: #ffffff;
+    --color-card: #ffffff;
+    --border-sage: rgba(183, 198, 194, 0.3);
+
+    /* Radii */
+    --radius-main: 40px;
+    --radius-item: 24px;
+    --radius-nested: 16px;
+
+    /* Shadows */
+    --shadow-soft: 0 20px 50px -12px rgba(0, 0, 0, 0.08);
+    --shadow-card: 0 10px 30px -5px rgba(23, 30, 25, 0.05);
+    --shadow-red: 0 10px 25px -5px rgba(202, 0, 19, 0.35);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    background-color: var(--color-bg);
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-charcoal);
+    font-family: 'Nunito', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Headings & Hierarchy as specified */
+  h1, .heading-xl {
+    font-weight: 900;
+    color: var(--color-charcoal);
+    letter-spacing: -0.02em;
+  }
+
+  h2, .heading-lg {
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--color-charcoal);
+    letter-spacing: -0.015em;
+  }
+
+  h3, .heading-md {
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--color-charcoal);
+  }
+
+  .label-tag {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-sage);
+  }
+
+  ::selection {
+    background-color: var(--color-red);
+    color: #ffffff;
+  }
+}
+
+@layer utilities {
+  /* Card Radii & Borders */
+  .card-main {
+    background-color: #ffffff;
+    border-radius: 40px;
+    border: 1px solid rgba(183, 198, 194, 0.3);
+    box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.08);
+  }
+
+  .card-item {
+    background-color: #ffffff;
+    border-radius: 24px;
+    border: 1px solid rgba(183, 198, 194, 0.3);
+    box-shadow: 0 10px 30px -5px rgba(23, 30, 25, 0.05);
+    transition: all 0.25s ease-in-out;
+  }
+
+  .card-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 40px -10px rgba(23, 30, 25, 0.08);
+  }
+
+  /* Bento Metric Card (Glassmorphism-lite) */
+  .bento-card {
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 16px;
+    border: 1px solid rgba(183, 198, 194, 0.3);
+    padding: 12px 14px;
+  }
+
+  /* Primary Button (Red CTA) */
+  .btn-primary {
+    background-color: #ca0013;
+    color: #ffffff;
+    border-radius: 20px;
+    font-weight: 800;
+    transition: all 0.25s ease-in-out;
+    box-shadow: 0 8px 20px -4px rgba(202, 0, 19, 0.3);
+  }
+
+  .btn-primary:hover {
+    background-color: #a80010;
+    transform: translateY(-1px);
+    box-shadow: 0 12px 25px -4px rgba(202, 0, 19, 0.4);
+  }
+
+  /* Secondary Button (White with gray-green border) */
+  .btn-secondary {
+    background-color: #ffffff;
+    color: #171e19;
+    border: 1px solid rgba(183, 198, 194, 0.4);
+    border-radius: 20px;
+    font-weight: 700;
+    transition: all 0.25s ease-in-out;
+  }
+
+  .btn-secondary:hover {
+    background-color: #eeebe3;
+    border-color: #b7c6c2;
+    transform: translateY(-1px);
+  }
+
+  /* Floating Cutout Action Button */
+  .floating-action-btn {
+    width: 56px;
+    height: 56px;
+    background-color: #ca0013;
+    border-radius: 9999px;
+    border: 4px solid #eeebe3;
+    box-shadow: 0 10px 25px -5px rgba(202, 0, 19, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    transition: all 0.25s ease-in-out;
+  }
+
+  .floating-action-btn:hover {
+    transform: translateY(-2px) scale(1.05);
+    background-color: #a80010;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.25s ease-in-out forwards;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #eeebe3;
+}
+::-webkit-scrollbar-thumb {
+  background: #b7c6c2;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #171e19;
+}
+
+*:focus-visible {
+  outline: 2px solid #ca0013;
+  outline-offset: 2px;
+}
