@@ -7,7 +7,7 @@ import { Truck, MapPin } from 'lucide-react';
 export default function AdminShippingPage() {
   const { freightZones } = useAppStore();
 
-  const formatPrice = (val: number) => {
+  const formatPrice = (val?: number) => { val = val || 0;
     return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(val);
   };
 

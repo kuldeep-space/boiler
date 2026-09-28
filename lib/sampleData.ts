@@ -582,6 +582,7 @@ export const INITIAL_QUOTES: Quote[] = [
       'Fuel Preference': 'Agro-briquettes / Sawdust pellets',
       'Auxiliaries Needed': 'Economizer + MDC Dust Collector + PLC Panel'
     },
+    items: [],
     notes: 'Please quote with turn-key erection, civil foundation layout, and IBR Form IIIC registration support.',
     status: 'quoted',
     unitPrice: 4650000,

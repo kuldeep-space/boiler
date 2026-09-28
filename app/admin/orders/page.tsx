@@ -34,7 +34,7 @@ export default function AdminOrdersPage() {
     alert(`Order ${selectedOrder.orderNumber} status updated to ${newOrderStatus.toUpperCase()}!`);
   };
 
-  const formatPrice = (val: number) => {
+  const formatPrice = (val?: number) => { val = val || 0;
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
       currency: 'INR',

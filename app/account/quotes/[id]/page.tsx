@@ -16,7 +16,7 @@ export default function QuoteDetailPage() {
 
   const [message, setMessage] = useState('');
 
-  const formatPrice = (val: number) => {
+  const formatPrice = (val?: number) => { val = val || 0;
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
       currency: 'INR',
@@ -172,7 +172,7 @@ export default function QuoteDetailPage() {
           {Object.entries(quote.specsRequired || {}).map(([k, v], idx) => (
             <div key={idx}>
               <span className="text-slate-400 block text-[10px]">{k}</span>
-              <strong className="text-slate-800 font-mono">{v}</strong>
+              <strong className="text-slate-800 font-mono">{String(v)}</strong>
             </div>
           ))}
         </div>

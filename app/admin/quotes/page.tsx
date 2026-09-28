@@ -50,7 +50,7 @@ export default function AdminQuotesPage() {
     alert(`Commercial Quotation ${selectedQuote.quoteNumber} dispatched to customer dashboard! Total: ₹${grandTotal.toLocaleString('en-IN')}`);
   };
 
-  const formatPrice = (val: number) => {
+  const formatPrice = (val?: number) => { val = val || 0;
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
       currency: 'INR',

@@ -24,7 +24,7 @@ export default function AdminDashboardOverviewPage() {
   const completedOrders = orders.filter((o) => o.orderStatus === 'delivered');
   const pendingQuotes = quotes.filter((q) => q.status === 'pending');
 
-  const formatPrice = (val: number) => {
+  const formatPrice = (val?: number) => { val = val || 0;
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
       currency: 'INR',

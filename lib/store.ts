@@ -362,6 +362,7 @@ export function useAppStore() {
           grandTotal: targetQuote.grandTotal,
           paymentStatus: 'pending',
           paymentMethod: 'Proforma Invoice / NEFT Wire Transfer',
+          status: 'confirmed',
           orderStatus: 'confirmed',
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString()
@@ -370,7 +371,7 @@ export function useAppStore() {
         saveState({
           ...memoryState,
           quotes: newQuotes,
-          orders: [createdOrder, ...memoryState.orders]
+          orders: [createdOrder as Order, ...memoryState.orders]
         });
       } else {
         saveState({ ...memoryState, quotes: newQuotes });

@@ -13,7 +13,7 @@ export default function OrderDetailsPage() {
 
   const order = orders.find((o) => o.id === orderIdParam || o.orderNumber === orderIdParam) || orders[0];
 
-  const formatPrice = (val: number) => {
+  const formatPrice = (val?: number) => { val = val || 0;
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
       currency: 'INR',

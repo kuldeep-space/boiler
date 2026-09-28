@@ -47,15 +47,15 @@ export default function AdminProductsPage() {
     setPrice(p.price);
     setHsnCode(p.hsnCode);
     setGstRate(p.gstRate);
-    setCapacity(p.capacity);
-    setFuelType(p.fuelType);
-    setPressure(p.pressure);
-    setEfficiency(p.efficiency);
-    setDimensions(p.dimensions);
-    setWeight(p.weight);
-    setMaterial(p.material);
-    setShortDescription(p.shortDescription);
-    setImage(p.image);
+    setCapacity(p.capacity || "");
+    setFuelType(p.fuelType || "");
+    setPressure(p.pressure || "");
+    setEfficiency(p.efficiency || "");
+    setDimensions(p.dimensions || "");
+    setWeight(p.weight || "");
+    setMaterial(p.material || "");
+    setShortDescription(p.shortDescription || "");
+    setImage(p.image || "");
     setIsEditing(true);
   };
 
@@ -107,7 +107,7 @@ export default function AdminProductsPage() {
     }
   };
 
-  const formatPrice = (val: number) => {
+  const formatPrice = (val?: number) => { val = val || 0;
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
       currency: 'INR',

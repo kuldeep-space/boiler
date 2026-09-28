@@ -40,7 +40,7 @@ export default function ProductDetailPage() {
   const [selectedQty, setSelectedQty] = useState(1);
   const [activeTab, setActiveTab] = useState<'specs' | 'features' | 'applications' | 'downloads'>('specs');
 
-  const formatPrice = (val: number) => {
+  const formatPrice = (val?: number) => { val = val || 0;
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
       currency: 'INR',

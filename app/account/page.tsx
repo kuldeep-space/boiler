@@ -11,7 +11,7 @@ export default function CustomerDashboardPage() {
   const activeOrders = orders.slice(0, 3);
   const pendingQuotes = quotes.filter((q) => q.status === 'quoted' || q.status === 'pending');
 
-  const formatPrice = (val: number) => {
+  const formatPrice = (val?: number) => { val = val || 0;
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
       currency: 'INR',
@@ -113,7 +113,7 @@ export default function CustomerDashboardPage() {
                 <div className="flex items-center gap-2 font-mono font-bold text-slate-900 text-sm">
                   {ord.orderNumber}
                   <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded capitalize">
-                    {ord.orderStatus.replace('_', ' ')}
+                    {(ord.orderStatus || ord.status).replace('_', ' ')}
                   </span>
                 </div>
                 <p className="text-slate-500 text-[11px] mt-0.5">

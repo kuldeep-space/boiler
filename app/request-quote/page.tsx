@@ -58,6 +58,7 @@ export default function RequestQuotePage() {
         'Required Operating Pressure': pressureReq,
         'Fuel Preference': fuelReq
       },
+      items: [],
       notes,
       attachmentName: attachment || undefined
     });

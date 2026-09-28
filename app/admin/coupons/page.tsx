@@ -35,7 +35,7 @@ export default function AdminCouponsPage() {
     alert(`Coupon ${newC.code} created!`);
   };
 
-  const formatPrice = (val: number) => {
+  const formatPrice = (val?: number) => { val = val || 0;
     return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(val);
   };
 

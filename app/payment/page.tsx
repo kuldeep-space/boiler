@@ -21,7 +21,7 @@ export default function PaymentGatewaySimulatorPage() {
   const [upiId, setUpiId] = useState('rajesh@okhdfcbank');
   const [processing, setProcessing] = useState(false);
 
-  const formatPrice = (val: number) => {
+  const formatPrice = (val?: number) => { val = val || 0;
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
       currency: 'INR',

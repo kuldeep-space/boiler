@@ -23,7 +23,7 @@ export default function CheckoutPage() {
 
   const cartTotals = calculateCartTotals(cart, selectedAddress, activeCoupon);
 
-  const formatPrice = (val: number) => {
+  const formatPrice = (val?: number) => { val = val || 0;
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
       currency: 'INR',
@@ -50,7 +50,7 @@ export default function CheckoutPage() {
       billingAddress: selectedAddress,
       shippingAddress: selectedAddress,
       items: cart.map((i) => ({
-        productId: i.productId,
+        productId: i.productId || i.product.id,
         name: i.product.name,
         sku: i.product.sku,
         quantity: i.quantity,
@@ -74,6 +74,7 @@ export default function CheckoutPage() {
       freightAmount: cartTotals.freightAmount,
       freightMode: 'calculated',
       grandTotal: cartTotals.grandTotal,
+      status: 'pending',
       paymentStatus: 'pending',
       paymentMethod,
       orderStatus: 'pending',

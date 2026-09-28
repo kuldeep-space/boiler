@@ -8,7 +8,7 @@ import { ShoppingBag, Truck, FileText, ArrowRight } from 'lucide-react';
 export default function CustomerOrdersPage() {
   const { orders } = useAppStore();
 
-  const formatPrice = (val: number) => {
+  const formatPrice = (val?: number) => { val = val || 0;
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
       currency: 'INR',
@@ -36,7 +36,7 @@ export default function CustomerOrdersPage() {
                 <div className="flex items-center gap-2">
                   <span className="font-mono font-bold text-sm text-slate-900">{ord.orderNumber}</span>
                   <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded capitalize">
-                    {ord.orderStatus.replace('_', ' ')}
+                    {(ord.orderStatus || ord.status).replace('_', ' ')}
                   </span>
                   <span className="bg-sky-100 text-sky-800 text-[10px] font-bold px-2 py-0.5 rounded capitalize">
                     Payment: {ord.paymentStatus}

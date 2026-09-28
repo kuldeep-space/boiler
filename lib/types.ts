@@ -288,6 +288,8 @@ export interface Quote {
   quantity?: number;
   subtotal?: number;
   notes?: string;
+  requiredDeliveryDate?: string;
+  attachmentName?: string;
 
   // Admin filled
   quotedAmount?: number;

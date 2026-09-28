@@ -9,7 +9,7 @@ export default function CustomerInvoicesPage() {
   const { orders } = useAppStore();
   const [selectedInvoice, setSelectedInvoice] = useState<Order | null>(orders[0] || null);
 
-  const formatPrice = (val: number) => {
+  const formatPrice = (val?: number) => { val = val || 0;
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
       currency: 'INR',
