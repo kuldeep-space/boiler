@@ -105,8 +105,6 @@ export const Footer: React.FC = () => {
                   { href: '/terms', label: 'Terms & Conditions' },
                   { href: '/privacy-policy', label: 'Privacy & Security' },
                   { href: '/refund-policy', label: 'Refund Policy' },
-                  { href: '/certifications', label: 'IBR Compliance' },
-                  { href: '/technical-resources', label: 'Steam Calculators' },
                 ].map(({ href, label }) => (
                   <li key={href}>
                     <Link

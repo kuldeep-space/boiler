@@ -322,11 +322,6 @@ export const Header: React.FC = () => {
           {[
             { href: '/', label: 'HOME' },
             { href: '/products', label: 'PRODUCT CATALOGUE' },
-            { href: '/industries', label: 'INDUSTRIES' },
-            { href: '/projects', label: 'PROJECTS' },
-            { href: '/certifications', label: 'IBR & ISO' },
-            { href: '/technical-resources', label: 'TECHNICAL' },
-            { href: '/blog', label: 'ARTICLES' },
             { href: '/about', label: 'ABOUT US' },
           ].map(({ href, label }) => (
             <Link
@@ -385,11 +380,6 @@ export const Header: React.FC = () => {
             {[
               { href: '/', label: 'HOME' },
               { href: '/products', label: 'CATALOGUE' },
-              { href: '/industries', label: 'INDUSTRIES' },
-              { href: '/projects', label: 'PROJECTS' },
-              { href: '/certifications', label: 'IBR & ISO' },
-              { href: '/technical-resources', label: 'TECHNICAL' },
-              { href: '/blog', label: 'ARTICLES' },
               { href: '/about', label: 'ABOUT US' },
             ].map(({ href, label }) => (
               <Link
