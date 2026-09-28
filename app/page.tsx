@@ -15,13 +15,10 @@ import {
   Truck,
   Wrench,
   Building2,
-  CheckCircle2,
-  ClipboardList,
   Users,
   Factory,
   Zap,
   Droplets,
-  Settings,
   ChevronRight,
   Gauge,
   ThermometerSun,
@@ -29,10 +26,6 @@ import {
   Layers,
   Sparkles,
   FileCheck,
-  Home,
-  Grid,
-  FileText,
-  Search,
 } from 'lucide-react';
 
 export default function HomePage() {
@@ -56,23 +49,23 @@ export default function HomePage() {
 
   const WHY_US_ITEMS = [
     {
-      title: '30+ Years Engineering Expertise',
-      desc: 'Senior thermal engineers and IBR-certified welders at Thanagazi design robust three-pass wetback boilers built for heavy round-the-clock Indian industrial operation.',
+      title: 'Precision Boiler Fabrication in Thanagazi',
+      desc: 'Expert thermal engineers in Thanagazi, Rajasthan design robust Wood & Sawdust Fired (Non-IBR) steam boilers and Khoya making machines built for heavy round-the-clock Indian operation.',
       icon: Award,
     },
     {
-      title: 'IBR 1950 & CIB Certified Manufacturing',
-      desc: 'Our Thanagazi facility is approved under IBR 1950 Form IIIC by CIB Rajasthan. Every boiler passes X-ray weld testing and 1.5x hydraulic pressure tests before dispatch.',
+      title: 'Tested Safety & 6 to 20 PSI Pressure Standards',
+      desc: 'Every boiler is fabricated from premium stainless steel or heavy mild steel, hydraulically tested and calibrated for safe, fuel-efficient operation.',
       icon: ShieldCheck,
     },
     {
-      title: 'Pan-India Hydraulic Trailer Freight',
-      desc: 'Dedicated hydraulic low-bed trailer logistics for industrial boilers up to 20 TPH across all 28 states and Union Territories, with real-time consignment updates.',
+      title: 'Pan-India Machinery Transport & Logistics',
+      desc: 'Direct factory transport and dispatch for 200 kg to 1000 kg boilers and khoya machines across all states, with secure logistics and real-time consignment updates.',
       icon: Truck,
     },
     {
-      title: 'Site Erection, Commissioning & Spares',
-      desc: 'Complete turnkey assistance: factory foundation drawings, chimney piping, IBR inspector liaison, operator training, and genuine spares replacement.',
+      title: 'Turnkey Commissioning, Piping & Support',
+      desc: 'Complete technical assistance: steam piping layout, chimney setup, burner tuning, operator guidance, and genuine spare parts replacement.',
       icon: Wrench,
     },
   ];
@@ -130,7 +123,7 @@ export default function HomePage() {
                       Thanagazi, Rajasthan · Pan-India Supplier
                     </span>
                     <p className="text-xs sm:text-sm font-bold text-[#171e19]">
-                      IBR 1950 Form IIIC Approved Manufacturer
+                      Wood Fired Steam Boilers &amp; Khoya Machinery
                     </p>
                   </div>
                 </div>
@@ -139,14 +132,14 @@ export default function HomePage() {
                 <h1 className="heading-xl text-2xl sm:text-4xl lg:text-5xl leading-[1.12] sm:leading-[1.08] text-[#171e19]">
                   Industrial Boilers Built for{' '}
                   <span className="text-[#ca0013]">Unmatched</span>{' '}
-                  Reliability.
+                  Performance.
                 </h1>
 
                 {/* Body Copy */}
                 <p className="text-xs sm:text-base leading-relaxed font-semibold text-[#6B7280] max-w-xl">
-                  Pandey Ji Iron Works manufactures robust Package Steam Boilers, Thermic Fluid Heaters,
-                  and Water Softeners. High thermal efficiency, heavy-gauge boiler steel, and
-                  Form IIIC IBR compliance across all 28 states.
+                  Pandayji Iron Works manufactures robust 200 kg to 1000 kg Wood Fired Steam Boilers (Non-IBR),
+                  automatic Khoya Making Machines, and heavy-duty steam equipment. Operating at 6 to 20 PSI with high thermal
+                  efficiency in Stainless Steel and Mild Steel.
                 </p>
 
                 {/* CTAs: Mobile full-width stack / Desktop inline */}
@@ -159,22 +152,22 @@ export default function HomePage() {
                     <ArrowRight className="w-4 h-4" />
                   </Link>
 
-                  <Link
-                    href="/request-quote"
+                  <a
+                    href="tel:9680429713"
                     className="btn-secondary w-full sm:w-auto px-5 sm:px-6 py-3 sm:py-3.5 flex items-center justify-center gap-2 text-xs sm:text-sm font-bold"
                   >
-                    <ClipboardList className="w-4 h-4 text-[#ca0013]" />
-                    Get Custom Quotation
-                  </Link>
+                    <Phone className="w-4 h-4 text-[#ca0013]" />
+                    Call Us: 96804 29713
+                  </a>
                 </div>
 
                 {/* Nested 2-column on mobile, 4-column on desktop Bento metric cards */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 pt-2">
                   {[
-                    { label: 'CAPACITY', value: '1 to 20 TPH', icon: Zap },
-                    { label: 'PRESSURE', value: 'Up to 24 kg/cm²', icon: Gauge },
-                    { label: 'FUEL OPTIONS', value: 'Biomass, Coal, Gas', icon: Flame },
-                    { label: 'EFFICIENCY', value: 'Up to 88% Net', icon: Sparkles },
+                    { label: 'CAPACITY RANGE', value: '200 to 1000 Kg', icon: Zap },
+                    { label: 'STEAM PRESSURE', value: '6 to 20 PSI', icon: Gauge },
+                    { label: 'FUEL COMPATIBLE', value: 'Wood, Sawdust, Coal', icon: Flame },
+                    { label: 'FABRICATION', value: 'Stainless & Mild Steel', icon: Sparkles },
                   ].map(({ label, value, icon: Icon }) => (
                     <div
                       key={label}
@@ -247,10 +240,10 @@ export default function HomePage() {
                     </div>
                     <div className="truncate">
                       <p className="font-black text-xs text-[#171e19] truncate">
-                        5.0 TPH Three-Pass Wetback
+                        Wood Fired Steam Boilers (Non-IBR)
                       </p>
                       <p className="text-[10px] sm:text-[11px] font-bold text-[#b7c6c2] truncate">
-                        Form IIIC Certified &amp; Pressure Tested
+                        200 Kg to 1000 Kg Capacity Range
                       </p>
                     </div>
                   </div>
@@ -258,7 +251,7 @@ export default function HomePage() {
                     className="px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-black text-white flex-shrink-0 ml-2"
                     style={{ backgroundColor: '#171e19' }}
                   >
-                    17.5 kg/cm²
+                    6 - 20 PSI
                   </span>
                 </div>
               </div>
@@ -275,14 +268,14 @@ export default function HomePage() {
               <div className="flex items-center gap-2 text-[#171e19] font-bold">
                 <FileCheck className="w-4 h-4 text-[#ca0013] flex-shrink-0" />
                 <span className="leading-tight">
-                  Immediate Dispatch Available for 1.0 TPH, 2.0 TPH, and 3.0 TPH biomass boilers.
+                  Available in 200 kg, 300 kg, 400 kg, 500 kg, 600 kg, 700 kg, 800 kg, 900 kg &amp; 1000 kg capacities.
                 </span>
               </div>
               <a
-                href="tel:09680429713"
+                href="tel:9680429713"
                 className="font-black text-[#ca0013] hover:underline flex items-center gap-1 flex-shrink-0"
               >
-                Call Works: 096804 29713 <ChevronRight className="w-3.5 h-3.5" />
+                Call Works: 96804 29713 <ChevronRight className="w-3.5 h-3.5" />
               </a>
             </div>
           </div>
@@ -293,14 +286,6 @@ export default function HomePage() {
             Touch-scrollable with snap points
             ════════════════════════════════════════════════════ */}
         <section className="px-3 sm:px-4 py-2 sm:py-4 max-w-7xl mx-auto">
-          <div className="flex items-center justify-between mb-2.5 px-1">
-            <span className="label-tag text-[10px] sm:text-[11px] font-black tracking-widest text-[#b7c6c2]">
-              Filter Equipment Spectrum
-            </span>
-            <span className="text-xs font-bold text-[#6B7280]">
-              Showing {featuredProducts.length} models
-            </span>
-          </div>
 
           <div className="flex items-center gap-2.5 sm:gap-3 overflow-x-auto pb-2 pt-1 scrollbar-none snap-x -webkit-overflow-scrolling-touch">
             {/* 'All' button */}
@@ -352,39 +337,27 @@ export default function HomePage() {
                 >
                   {isActive ? (
                     <div
-                      className="h-12 sm:h-14 px-3 sm:px-4 rounded-full flex items-center gap-2.5 sm:gap-3 shadow-md"
+                      className="h-10 sm:h-11 px-3 sm:px-4 rounded-full flex items-center gap-2 shadow-md"
                       style={{
                         backgroundColor: '#171e19',
-                        minWidth: '140px',
                       }}
                     >
                       <div
-                        className="w-8 sm:w-10 h-8 sm:h-10 rounded-full flex items-center justify-center text-white font-black text-xs"
+                        className="w-5 h-5 rounded-full flex items-center justify-center text-white font-black text-[10px] flex-shrink-0"
                         style={{ backgroundColor: '#ca0013' }}
                       >
-                        {cat.productCount}
+                        {cat.productCount || '✓'}
                       </div>
-                      <div className="text-left pr-2">
-                        <span className="block text-xs font-black text-white truncate max-w-[90px] sm:max-w-[100px]">
-                          {cat.name.split(' ')[0]}
-                        </span>
-                        <span className="block text-[8px] sm:text-[9px] uppercase tracking-wider text-[#b7c6c2]">
-                          Selected
-                        </span>
-                      </div>
+                      <span className="text-xs font-black text-white whitespace-nowrap">{cat.name}</span>
                     </div>
                   ) : (
                     <div
-                      className="w-12 sm:w-14 h-12 sm:h-14 rounded-2xl flex items-center justify-center bg-white shadow-sm hover:border-[#171e19]"
+                      className="h-10 sm:h-11 px-3 sm:px-4 rounded-full flex items-center justify-center bg-white shadow-sm"
                       style={{
-                        borderRadius: '16px',
                         border: '1px solid rgba(183, 198, 194, 0.4)',
                       }}
-                      title={cat.name}
                     >
-                      <span className="text-[11px] sm:text-xs font-black text-[#171e19]">
-                        {cat.name.slice(0, 3).toUpperCase()}
-                      </span>
+                      <span className="text-xs font-bold text-[#171e19] whitespace-nowrap">{cat.name}</span>
                     </div>
                   )}
                 </button>
@@ -414,11 +387,33 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {featuredProducts.map((prod) => (
-              <ProductCard key={prod.id} product={prod} />
-            ))}
-          </div>
+          {featuredProducts.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {featuredProducts.map((prod) => (
+                <ProductCard key={prod.id} product={prod} />
+              ))}
+            </div>
+          ) : (
+            <div
+              className="p-10 sm:p-14 text-center rounded-[32px] space-y-3"
+              style={{
+                backgroundColor: '#ffffff',
+                border: '1px solid rgba(183, 198, 194, 0.3)',
+              }}
+            >
+              <Layers className="w-12 h-12 text-[#b7c6c2] mx-auto" />
+              <h3 className="font-black text-lg text-[#171e19]">Catalogue Template Ready</h3>
+              <p className="text-xs text-[#6B7280] font-semibold max-w-sm mx-auto">
+                No equipment is currently published. You can publish new boiler models anytime from the Admin Panel.
+              </p>
+              <Link
+                href="/contact"
+                className="btn-primary inline-flex items-center gap-2 px-5 py-2.5 text-xs font-black uppercase tracking-wider"
+              >
+                Inquire For Custom Boilers
+              </Link>
+            </div>
+          )}
         </section>
 
         {/* ════════════════════════════════════════════════════
@@ -560,19 +555,19 @@ export default function HomePage() {
 
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5 sm:gap-3 pt-2">
                 <Link
-                  href="/request-quote"
+                  href="/contact"
                   className="btn-primary w-full sm:w-auto px-7 sm:px-8 py-3 sm:py-3.5 flex items-center justify-center gap-2 text-xs font-black uppercase tracking-wider"
                 >
-                  <ClipboardList className="w-4 h-4" />
-                  Submit RFQ — Quote in 24h
+                  <Phone className="w-4 h-4" />
+                  Contact Us
                 </Link>
 
                 <a
-                  href="tel:09680429713"
+                  href="tel:9680429713"
                   className="btn-secondary w-full sm:w-auto px-6 sm:px-7 py-3 sm:py-3.5 flex items-center justify-center gap-2 text-xs font-bold"
                 >
                   <Phone className="w-4 h-4 text-[#ca0013]" />
-                  Call 096804 29713
+                  Call 96804 29713
                 </a>
               </div>
             </div>
@@ -581,64 +576,7 @@ export default function HomePage() {
 
       </main>
 
-      {/* ════════════════════════════════════════════════════
-          § 7 — FLOATING NAVIGATION (Fixed Mobile / Bottom Nav)
-          Fixed bottom pill on mobile with central cutout action button
-          ════════════════════════════════════════════════════ */}
-      <div className="md:hidden fixed bottom-2 left-2 right-2 max-w-md mx-auto z-50 pointer-events-none">
-        <div
-          className="pointer-events-auto h-16 rounded-full flex items-center justify-between px-5 relative shadow-2xl"
-          style={{
-            backgroundColor: '#171e19',
-            border: '1px solid rgba(183, 198, 194, 0.25)',
-          }}
-        >
-          {/* Home */}
-          <Link
-            href="/"
-            className="w-11 h-11 flex items-center justify-center text-white"
-            title="Home"
-          >
-            <Home className="w-5 h-5 text-white" />
-          </Link>
 
-          {/* Catalogue */}
-          <Link
-            href="/products"
-            className="w-11 h-11 flex items-center justify-center text-[#b7c6c2] hover:text-white"
-            title="Products"
-          >
-            <Grid className="w-5 h-5 text-[#b7c6c2]" />
-          </Link>
-
-          {/* Floating Center Action Button (56px red circle offset -32px above bar with 4px #eeebe3 border) */}
-          <Link
-            href="/request-quote"
-            className="floating-action-btn -translate-y-6"
-            title="Request Custom Quote"
-          >
-            <ClipboardList className="w-6 h-6 text-white" />
-          </Link>
-
-          {/* Orders */}
-          <Link
-            href="/account/orders"
-            className="w-11 h-11 flex items-center justify-center text-[#b7c6c2] hover:text-white"
-            title="My Orders"
-          >
-            <FileText className="w-5 h-5 text-[#b7c6c2]" />
-          </Link>
-
-          {/* Contact */}
-          <Link
-            href="/contact"
-            className="w-11 h-11 flex items-center justify-center text-[#b7c6c2] hover:text-white"
-            title="Contact Factory"
-          >
-            <Phone className="w-5 h-5 text-[#b7c6c2]" />
-          </Link>
-        </div>
-      </div>
 
       <Footer />
     </div>

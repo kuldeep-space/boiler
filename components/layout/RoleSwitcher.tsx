@@ -1,8 +1,7 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
-import { Truck, PhoneCall, Award, ChevronRight } from 'lucide-react';
+import { PhoneCall } from 'lucide-react';
 import { COMPANY_DETAILS } from '../../lib/sampleData';
 
 export const RoleSwitcher: React.FC = () => {
@@ -31,18 +30,12 @@ export const RoleSwitcher: React.FC = () => {
             </span>
           </div>
 
-          <span className="hidden lg:inline opacity-20">|</span>
-
-          <div className="hidden lg:flex items-center gap-1.5 text-[11px] text-[#b7c6c2] flex-shrink-0">
-            <Truck className="w-3.5 h-3.5 text-white" />
-            <span>Pan-India Hydraulic Trailer Dispatch</span>
-          </div>
         </div>
 
-        {/* Right: Hotline & Quick Actions */}
+        {/* Right: Call & Quick Actions */}
         <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0 text-[10px] sm:text-[11px]">
           <span className="hidden sm:inline text-[#b7c6c2] font-medium">
-            Helpline:
+            Call Us:
           </span>
           <a
             href={`tel:${COMPANY_DETAILS.phone}`}
@@ -51,14 +44,13 @@ export const RoleSwitcher: React.FC = () => {
             <PhoneCall className="w-3 h-3 text-[#ca0013]" />
             <span>{COMPANY_DETAILS.phone}</span>
           </a>
-
-          <Link
-            href="/request-quote"
-            className="inline-flex items-center gap-0.5 sm:gap-1 px-2.5 py-0.5 sm:py-1 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-white transition-all duration-200 hover:bg-[#a80010] whitespace-nowrap"
-            style={{ backgroundColor: '#ca0013' }}
+          <span className="text-[#b7c6c2] hidden md:inline">|</span>
+          <a
+            href={`tel:${COMPANY_DETAILS.phone2}`}
+            className="hidden md:flex items-center gap-1 font-black text-white hover:text-[#ca0013] transition-colors whitespace-nowrap"
           >
-            RFQ <ChevronRight className="w-2.5 h-2.5" />
-          </Link>
+            <span>{COMPANY_DETAILS.phone2}</span>
+          </a>
         </div>
       </div>
     </div>

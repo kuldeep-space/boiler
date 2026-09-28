@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Product, Category, CartItem, UserProfile, Order, Quote, Coupon, HSNConfig, FreightZoneRule, OrderStatus, PaymentStatus, QuoteStatus } from './types';
 import { INITIAL_CATEGORIES, INITIAL_PRODUCTS, INITIAL_USER, INITIAL_ORDERS, INITIAL_QUOTES, INITIAL_COUPONS, INITIAL_HSN_CONFIGS, INITIAL_FREIGHT_ZONES } from './sampleData';
 
-const STORE_KEY = 'bte_industrial_boilers_store_v1';
+const STORE_KEY = 'pandayji_iron_works_store_v2';
 
 interface AppState {
   products: Product[];
@@ -32,8 +32,8 @@ function getInitialState(): AppState {
       hsnConfigs: INITIAL_HSN_CONFIGS,
       freightZones: INITIAL_FREIGHT_ZONES,
       currentRole: 'customer',
-      wishlist: ['prod-steam-5tph-biomass', 'prod-ibr-safety-valve-DN50'],
-      activeCoupon: INITIAL_COUPONS[0]
+      wishlist: [],
+      activeCoupon: null
     };
   }
 
@@ -52,7 +52,7 @@ function getInitialState(): AppState {
         hsnConfigs: parsed.hsnConfigs || INITIAL_HSN_CONFIGS,
         freightZones: parsed.freightZones || INITIAL_FREIGHT_ZONES,
         currentRole: parsed.currentRole || 'customer',
-        wishlist: parsed.wishlist || ['prod-steam-5tph-biomass'],
+        wishlist: parsed.wishlist || [],
         activeCoupon: parsed.activeCoupon || null
       };
     }
@@ -71,8 +71,8 @@ function getInitialState(): AppState {
     hsnConfigs: INITIAL_HSN_CONFIGS,
     freightZones: INITIAL_FREIGHT_ZONES,
     currentRole: 'customer',
-    wishlist: ['prod-steam-5tph-biomass'],
-    activeCoupon: INITIAL_COUPONS[0]
+    wishlist: [],
+    activeCoupon: null
   };
 }
 
@@ -97,6 +97,59 @@ export function useAppStore() {
   useEffect(() => {
     const handler = () => setState({ ...memoryState });
     listeners.add(handler);
+
+    async function syncCatalog() {
+      try {
+        const res = await fetch('/api/catalog/products');
+        if (res.ok) {
+          const apiProducts = await res.json();
+          if (Array.isArray(apiProducts)) {
+            const mapped = apiProducts.map((item) => {
+              const slug = item.slug || (item.name ? item.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') : item.id);
+              const img = (item.images && item.images.length > 0) ? item.images[0] : (item.image || 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80');
+              const gallery = (item.images && item.images.length > 0) ? item.images : [img];
+              return {
+                id: item.id,
+                slug,
+                sku: item.sku || ('PJIW-' + String(item.id).slice(-6).toUpperCase()),
+                name: item.name,
+                shortDescription: item.description ? item.description.slice(0, 140) + '...' : '',
+                description: item.description || '',
+                categoryId: item.categoryId || 'cat-steam-boilers',
+                categoryName: item.categoryName || 'Industrial Steam Boilers',
+                brand: item.manufacturer || 'Pandayji Iron Works',
+                mode: (item.mode || 'direct') as 'direct' | 'quote',
+                status: 'published' as const,
+                availability: 'in_stock' as const,
+                image: img,
+                gallery,
+                capacity: item.capacity || 'Standard',
+                pressure: '6-20 PSI',
+                fuelType: 'Wood Sawdust Fired',
+                material: 'Stainless Steel / Mild Steel',
+                specifications: item.specifications || '',
+                price: Number(item.price) || 0,
+                hsnCode: '84021100',
+                gstRate: 18,
+                freightMode: 'fixed' as const,
+                show_call_now: item.show_call_now ?? true,
+                show_interested: item.show_interested ?? true,
+                createdAt: item.created_at || new Date().toISOString(),
+              };
+            });
+
+            if (JSON.stringify(memoryState.products) !== JSON.stringify(mapped)) {
+              saveState({ ...memoryState, products: mapped });
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('Could not auto-fetch catalog:', err);
+      }
+    }
+
+    syncCatalog();
+
     return () => {
       listeners.delete(handler);
     };
@@ -256,7 +309,7 @@ export function useAppStore() {
     // Quotes
     createQuote: (quoteInput: Omit<Quote, 'id' | 'quoteNumber' | 'status' | 'createdAt' | 'updatedAt'>) => {
       const id = `q-${Date.now().toString().slice(-5)}`;
-      const quoteNumber = `RFQ-PJIW-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+      const quoteNumber = `PJIW-INQ-2026-${Math.floor(1000 + Math.random() * 9000)}`;
       const newQuote: Quote = {
         ...quoteInput,
         id,

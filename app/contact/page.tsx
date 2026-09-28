@@ -5,7 +5,7 @@ import { Header } from '../../components/layout/Header';
 import { Footer } from '../../components/layout/Footer';
 import { RoleSwitcher } from '../../components/layout/RoleSwitcher';
 import { COMPANY_DETAILS } from '../../lib/sampleData';
-import { MapPin, PhoneCall, Mail, Clock, Send, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { MapPin, PhoneCall, Mail, Send, CheckCircle2 } from 'lucide-react';
 
 export default function ContactUsPage() {
   const [name, setName] = useState('');
@@ -18,181 +18,111 @@ export default function ContactUsPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
+    fetch('/api/catalog/queries', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ customer_name: name || company || 'Website Contact Lead', customer_phone: phone || '', customer_email: email || '', message: (company ? '[' + company + '] ' : '') + message })
+    }).catch((err) => console.warn('Could not post contact query:', err));
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#eeebe3' }}>
       <RoleSwitcher />
       <Header />
 
-      <div className="bg-slate-900 text-white py-12 px-4 border-b border-slate-800">
+      <div className="py-12 px-4" style={{ backgroundColor: '#171e19' }}>
         <div className="max-w-4xl mx-auto text-center space-y-3">
-          <span className="text-amber-400 font-mono text-xs font-bold uppercase tracking-wider block">
-            Direct Factory Contact
-          </span>
-          <h1 className="text-3xl sm:text-5xl font-black tracking-tight">
-            Contact Pandey Ji Iron Works
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto">
-            Get in touch with our boiler manufacturing plant at Thanagazi (Rajasthan) for technical sales, IBR quotes, and site service support.
-          </p>
+          <span className="font-mono text-xs font-bold uppercase tracking-wider block" style={{ color: '#b7c6c2' }}>Direct Factory Contact</span>
+          <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-white">Contact Pandey Ji Iron Works</h1>
+          <p className="text-xs sm:text-sm max-w-xl mx-auto" style={{ color: '#b7c6c2' }}>Get in touch with our boiler manufacturing plant at Thanagazi (Rajasthan) for technical sales, pricing, and service support.</p>
         </div>
       </div>
 
-      <main className="max-w-7xl mx-auto px-4 py-12 flex-1 w-full space-y-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Contact Details Card */}
-          <div className="lg:col-span-5 space-y-6">
-            <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-5 text-xs text-slate-700">
-              <h3 className="font-extrabold text-slate-900 text-base border-b border-slate-100 pb-3">
-                Factory & Head Office
-              </h3>
+      <main className="max-w-7xl mx-auto px-3 sm:px-4 py-8 sm:py-12 flex-1 w-full pb-24 md:pb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
+
+          <div className="lg:col-span-5 space-y-4">
+            <div className="p-6 space-y-5 text-xs" style={{ backgroundColor: '#ffffff', borderRadius: '24px', border: '1px solid rgba(183,198,194,0.3)', boxShadow: '0 10px 30px -5px rgba(0,0,0,0.06)' }}>
+              <h3 className="font-extrabold text-base pb-3" style={{ color: '#171e19', borderBottom: '1px solid rgba(183,198,194,0.3)' }}>Factory &amp; Head Office</h3>
 
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-lg bg-amber-100 text-amber-900 flex items-center justify-center shrink-0">
-                  <MapPin className="w-4 h-4" />
-                </div>
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: 'rgba(202,0,19,0.1)' }}><MapPin className="w-4 h-4" style={{ color: '#ca0013' }} /></div>
                 <div>
-                  <strong className="text-slate-900 text-sm block">Pandey Ji Iron Works</strong>
-                  <p className="text-slate-600 mt-1 leading-relaxed">
-                    {COMPANY_DETAILS.address}
-                  </p>
+                  <strong className="text-sm block font-black" style={{ color: '#171e19' }}>Pandey Ji Iron Works</strong>
+                  <p className="mt-1 leading-relaxed font-semibold" style={{ color: '#6B7280' }}>{COMPANY_DETAILS.address}</p>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-lg bg-sky-100 text-sky-900 flex items-center justify-center shrink-0">
-                  <PhoneCall className="w-4 h-4" />
-                </div>
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: 'rgba(23,30,25,0.08)' }}><PhoneCall className="w-4 h-4" style={{ color: '#171e19' }} /></div>
                 <div>
-                  <strong className="text-slate-900 text-sm block">Direct Phone Hotline</strong>
-                  <a href={`tel:${COMPANY_DETAILS.phone}`} className="text-sky-700 font-bold text-sm hover:underline font-mono">
-                    {COMPANY_DETAILS.phone}
-                  </a>
-                  <p className="text-slate-500 text-[11px] mt-0.5">Available 8:00 AM - 8:00 PM IST (Mon - Sat)</p>
+                  <strong className="text-sm block font-black" style={{ color: '#171e19' }}>Call Us</strong>
+                  <div className="flex flex-wrap items-center gap-2 mt-1">
+                    <a href={`tel:${COMPANY_DETAILS.phone}`} className="font-bold text-sm font-mono hover:underline" style={{ color: '#ca0013' }}>{COMPANY_DETAILS.phone}</a>
+                    <span style={{ color: '#b7c6c2' }}>/</span>
+                    <a href={`tel:${COMPANY_DETAILS.phone2}`} className="font-bold text-sm font-mono hover:underline" style={{ color: '#ca0013' }}>{COMPANY_DETAILS.phone2}</a>
+                  </div>
+                  <p className="text-[11px] mt-0.5" style={{ color: '#b7c6c2' }}>Available 8:00 AM - 8:00 PM IST (Mon - Sat)</p>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-900 flex items-center justify-center shrink-0">
-                  <Mail className="w-4 h-4" />
-                </div>
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: 'rgba(183,198,194,0.2)' }}><Mail className="w-4 h-4" style={{ color: '#171e19' }} /></div>
                 <div>
-                  <strong className="text-slate-900 text-sm block">Email Enquiries</strong>
-                  <a href={`mailto:${COMPANY_DETAILS.email}`} className="text-slate-800 font-medium hover:underline">
-                    {COMPANY_DETAILS.email}
-                  </a>
+                  <strong className="text-sm block font-black" style={{ color: '#171e19' }}>Email Enquiries</strong>
+                  <a href={`mailto:${COMPANY_DETAILS.email}`} className="font-medium hover:underline" style={{ color: '#6B7280' }}>{COMPANY_DETAILS.email}</a>
                 </div>
               </div>
 
-              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-1 font-mono text-[11px]">
-                <strong className="text-slate-900 block font-sans">GSTIN & Regulatory Registration:</strong>
-                <div>GSTIN: <strong className="text-sky-800">{COMPANY_DETAILS.gstin}</strong> (Rajasthan State)</div>
-                <div>IBR Authority: Chief Inspector of Boilers, Rajasthan</div>
+              <div className="p-4 space-y-1 font-mono text-[11px]" style={{ backgroundColor: 'rgba(238,235,227,0.7)', borderRadius: '12px', border: '1px solid rgba(183,198,194,0.3)' }}>
+                <strong className="block font-sans text-xs" style={{ color: '#171e19' }}>GSTIN &amp; Registration:</strong>
+                <div style={{ color: '#6B7280' }}>GSTIN: <strong style={{ color: '#171e19' }}>{COMPANY_DETAILS.gstin}</strong> (Rajasthan)</div>
+                <div style={{ color: '#6B7280' }}>IBR Authority: Chief Inspector of Boilers, Rajasthan</div>
               </div>
             </div>
 
-            {/* Map Placeholder Card */}
-            <div className="bg-slate-900 text-white rounded-2xl p-6 shadow-md border border-slate-800 space-y-2 text-xs">
-              <strong className="text-amber-400 block font-bold text-sm">Location Map Reference</strong>
-              <p className="text-slate-300">
-                Opposite Jyoti School, Pratapgarh Road, Thanagazi, Alwar District, Rajasthan 301022.
-              </p>
-              <div className="pt-2 text-[11px] text-slate-400 font-mono">
-                Pan-India Heavy Hydraulic Trailer Dispatch Yard
-              </div>
+            <div className="p-5 space-y-2 text-xs" style={{ backgroundColor: '#171e19', borderRadius: '20px' }}>
+              <strong className="block font-bold text-sm" style={{ color: '#ca0013' }}>Location Reference</strong>
+              <p style={{ color: '#b7c6c2' }}>Opposite Jyoti School, Pratapgarh Road, Thanagazi, Alwar District, Rajasthan 301022.</p>
+              <div className="pt-1 font-mono text-[11px]" style={{ color: '#6B7280' }}>Pan-India Heavy Hydraulic Trailer Dispatch</div>
             </div>
           </div>
 
-          {/* Contact Form */}
           <div className="lg:col-span-7">
             {submitted ? (
-              <div className="bg-white border border-emerald-200 rounded-2xl p-8 text-center space-y-4 shadow-sm">
-                <CheckCircle2 className="w-12 h-12 text-emerald-600 mx-auto" />
-                <h3 className="font-extrabold text-xl text-slate-900">Enquiry Submitted to Factory</h3>
-                <p className="text-xs text-slate-600 max-w-md mx-auto">
-                  Thank you for reaching out to Pandey Ji Iron Works. Our Thanagazi sales team will contact you at {phone} within 2 hours.
-                </p>
-                <button
-                  onClick={() => setSubmitted(false)}
-                  className="px-6 py-2.5 bg-slate-900 text-white font-bold text-xs rounded-xl"
-                >
-                  Send Another Message
-                </button>
+              <div className="p-8 text-center space-y-4" style={{ backgroundColor: '#ffffff', borderRadius: '24px', border: '1px solid rgba(183,198,194,0.3)', boxShadow: '0 10px 30px -5px rgba(0,0,0,0.06)' }}>
+                <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto" style={{ backgroundColor: 'rgba(202,0,19,0.1)' }}>
+                  <CheckCircle2 className="w-8 h-8" style={{ color: '#ca0013' }} />
+                </div>
+                <h3 className="font-extrabold text-xl" style={{ color: '#171e19' }}>Enquiry Submitted to Factory</h3>
+                <p className="text-xs max-w-md mx-auto font-semibold" style={{ color: '#6B7280' }}>Thank you for reaching out to Pandey Ji Iron Works. Our Thanagazi sales team will contact you at <strong style={{ color: '#171e19' }}>{phone}</strong> within 2 hours.</p>
+                <button onClick={() => setSubmitted(false)} className="btn-secondary px-6 py-2.5 font-bold text-xs">Send Another Message</button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-sm space-y-4 text-xs">
-                <h3 className="font-extrabold text-slate-900 text-base border-b border-slate-100 pb-3">
-                  Send Boiler Technical Query / Call Request
-                </h3>
+              <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-4 text-xs" style={{ backgroundColor: '#ffffff', borderRadius: '24px', border: '1px solid rgba(183,198,194,0.3)', boxShadow: '0 10px 30px -5px rgba(0,0,0,0.06)' }}>
+                <h3 className="font-extrabold text-base pb-3" style={{ color: '#171e19', borderBottom: '1px solid rgba(183,198,194,0.3)' }}>Send Boiler Technical Query / Call Request</h3>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block font-bold text-slate-700 mb-1">Your Name *</label>
-                    <input
-                      type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="e.g. Ramesh Chandra"
-                      className="w-full p-3 bg-slate-50 border rounded-xl"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block font-bold text-slate-700 mb-1">Company Name *</label>
-                    <input
-                      type="text"
-                      value={company}
-                      onChange={(e) => setCompany(e.target.value)}
-                      placeholder="e.g. Modern Textiles Pvt Ltd"
-                      className="w-full p-3 bg-slate-50 border rounded-xl"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block font-bold text-slate-700 mb-1">Phone / Mobile Number *</label>
-                    <input
-                      type="tel"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="096804 29713"
-                      className="w-full p-3 bg-slate-50 border rounded-xl font-mono"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block font-bold text-slate-700 mb-1">Email Address *</label>
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="ramesh@company.com"
-                      className="w-full p-3 bg-slate-50 border rounded-xl"
-                      required
-                    />
-                  </div>
+                  {[
+                    { label: 'Your Name *', type: 'text', value: name, setter: setName, placeholder: 'e.g. Ramesh Chandra', required: true },
+                    { label: 'Company Name (Optional)', type: 'text', value: company, setter: setCompany, placeholder: 'e.g. Modern Textiles Pvt Ltd', required: false },
+                    { label: 'Phone / Mobile *', type: 'tel', value: phone, setter: setPhone, placeholder: '96804 29713', required: true },
+                    { label: 'Email Address (Optional)', type: 'email', value: email, setter: setEmail, placeholder: 'name@company.com', required: false },
+                  ].map(({ label, type, value, setter, placeholder, required }) => (
+                    <div key={label}>
+                      <label className="block font-bold mb-1" style={{ color: '#171e19' }}>{label}</label>
+                      <input type={type} value={value} onChange={(e) => setter(e.target.value)} placeholder={placeholder} required={required} className="w-full p-3 outline-none transition-all" style={{ backgroundColor: 'rgba(238,235,227,0.5)', borderRadius: '12px', border: '1px solid rgba(183,198,194,0.4)', color: '#171e19' }} />
+                    </div>
+                  ))}
 
                   <div className="sm:col-span-2">
-                    <label className="block font-bold text-slate-700 mb-1">Boiler Capacity & Details Needed *</label>
-                    <textarea
-                      rows={4}
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                      placeholder="Specify required steam flow (TPH), fuel type (Biomass pellet/Wood/Gas), operating pressure, and site pincode..."
-                      className="w-full p-3 bg-slate-50 border rounded-xl"
-                      required
-                    ></textarea>
+                    <label className="block font-bold mb-1" style={{ color: '#171e19' }}>Boiler Capacity &amp; Requirement Details *</label>
+                    <textarea rows={4} value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Specify required steam capacity (200-1000 kg), fuel type (Wood/Sawdust), operating pressure, and delivery location..." required className="w-full p-3 outline-none resize-none transition-all" style={{ backgroundColor: 'rgba(238,235,227,0.5)', borderRadius: '12px', border: '1px solid rgba(183,198,194,0.4)', color: '#171e19' }} />
                   </div>
                 </div>
 
                 <div className="pt-2 flex justify-end">
-                  <button
-                    type="submit"
-                    className="px-8 py-3.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs uppercase tracking-wider rounded-xl shadow transition flex items-center gap-2"
-                  >
+                  <button type="submit" className="btn-primary px-8 py-3.5 text-xs font-black uppercase tracking-wider flex items-center gap-2">
                     <Send className="w-4 h-4" /> Submit Enquiry to Factory
                   </button>
                 </div>

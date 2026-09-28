@@ -140,7 +140,7 @@ export default function QuoteDetailPage() {
                 onClick={handleReject}
                 className="px-5 py-3.5 bg-rose-900/40 hover:bg-rose-900/60 text-rose-300 border border-rose-800 font-bold text-xs uppercase tracking-wider rounded-xl transition flex items-center gap-2"
               >
-                <XCircle className="w-4 h-4" /> Decline RFQ
+                <XCircle className="w-4 h-4" /> Decline Proposal
               </button>
             </div>
           )}

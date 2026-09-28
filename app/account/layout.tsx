@@ -16,7 +16,7 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
   const navItems = [
     { label: 'Dashboard', href: '/account', icon: LayoutDashboard },
     { label: 'My Orders', href: '/account/orders', icon: ShoppingBag },
-    { label: 'RFQ Quotations', href: '/account/quotes', icon: ClipboardList },
+    { label: 'Inquiries & Quotes', href: '/account/quotes', icon: ClipboardList },
     { label: 'GST Invoices', href: '/account/invoices', icon: FileText },
     { label: 'Address Book', href: '/account/addresses', icon: MapPin },
     { label: 'Saved Wishlist', href: '/account/wishlist', icon: Heart },

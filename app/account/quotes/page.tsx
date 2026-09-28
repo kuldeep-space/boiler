@@ -22,7 +22,7 @@ export default function CustomerQuotesPage() {
         <div>
           <h2 className="text-xl font-extrabold text-slate-900 flex items-center gap-2">
             <ClipboardList className="w-5 h-5 text-amber-500" />
-            My RFQ Technical Proposals & Quotes ({quotes.length})
+            My Technical Proposals & Quotes ({quotes.length})
           </h2>
           <p className="text-xs text-slate-500 mt-1">
             Review formal quotations issued by Pandey Ji Iron Works sales engineers. Accept to instantly place orders.
@@ -33,12 +33,24 @@ export default function CustomerQuotesPage() {
           href="/request-quote"
           className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-xl shadow transition"
         >
-          Submit New RFQ
+          Submit New Inquiry
         </Link>
       </div>
 
-      <div className="space-y-4">
-        {quotes.map((q) => (
+      {quotes.length === 0 ? (
+        <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center shadow-sm space-y-3">
+          <ClipboardList className="w-12 h-12 text-slate-300 mx-auto" />
+          <h3 className="font-bold text-slate-800">No Proposals Yet</h3>
+          <p className="text-xs text-slate-500 max-w-sm mx-auto">
+            You haven't requested any quotations yet. Submit an inquiry to receive technical specs and direct pricing.
+          </p>
+          <Link href="/request-quote" className="inline-block px-5 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-xl text-xs font-bold uppercase tracking-wider transition">
+            Submit New Inquiry
+          </Link>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {quotes.map((q) => (
           <div key={q.id} className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-3">
               <div>
@@ -89,7 +101,8 @@ export default function CustomerQuotesPage() {
             </div>
           </div>
         ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

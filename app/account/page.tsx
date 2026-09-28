@@ -33,7 +33,7 @@ export default function CustomerDashboardPage() {
           href="/request-quote"
           className="px-4 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-xl shadow transition"
         >
-          Submit New RFQ Quote
+          Submit New Inquiry
         </Link>
       </div>
 
@@ -47,7 +47,7 @@ export default function CustomerDashboardPage() {
 
         <div className="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm space-y-1">
           <ClipboardList className="w-5 h-5 text-amber-500" />
-          <span className="text-slate-500 text-[11px] block uppercase font-bold">Active RFQs</span>
+          <span className="text-slate-500 text-[11px] block uppercase font-bold">Active Inquiries</span>
           <strong className="text-2xl font-black text-slate-900 font-mono">{quotes.length}</strong>
         </div>
 

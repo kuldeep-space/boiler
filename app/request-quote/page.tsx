@@ -65,6 +65,20 @@ function RequestQuoteContent() {
 
     setCreatedQuoteNumber(newQuote.quoteNumber);
     setSubmitted(true);
+
+    // Sync to synchronized leads database and Supabase
+    fetch('/api/catalog/queries', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        customer_name: contactPerson || companyName || 'Client Inquiry',
+        customer_phone: phone || '',
+        customer_email: email || '',
+        product_name: targetProduct ? targetProduct.name : 'Custom Boiler Plant Requirement',
+        product_id: targetProduct?.id || null,
+        message: `Quote Request (${newQuote.quoteNumber}) for ${quantity} unit(s). Pressure: ${pressureReq}, Fuel: ${fuelReq}, Notes: ${notes}. Location: ${deliveryCity}, ${deliveryState} (${deliveryPincode}). GSTIN: ${gstin}`
+      })
+    }).catch((err) => console.warn('Could not post to queries sync:', err));
   };
 
   return (
@@ -92,13 +106,13 @@ function RequestQuoteContent() {
               style={{ backgroundColor: '#ca0013' }}
             >
               <ClipboardList className="w-4 h-4 text-white" />
-              Official B2B RFQ Wizard
+              Direct Factory Inquiry
             </div>
             <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-white">
-              Request a Technical Commercial Quote (RFQ)
+              Request Factory Quotation & Engineering Specs
             </h1>
             <p className="text-xs sm:text-sm text-[#b7c6c2] font-semibold max-w-xl mx-auto">
-              Get an itemized quotation including boiler equipment, auxiliary package, IBR Form IIIC certification fees, freight transport, and installation terms.
+              Get an itemized quotation including boiler equipment, auxiliary package, certification details, freight transport, and installation terms.
             </p>
           </div>
         </div>
@@ -116,10 +130,10 @@ function RequestQuoteContent() {
                 Quote Request Registered
               </span>
               <h2 className="text-2xl font-extrabold text-slate-900">
-                RFQ Reference: <span className="font-mono text-sky-700">{createdQuoteNumber}</span>
+                Inquiry Reference: <span className="font-mono text-[#ca0013]">{createdQuoteNumber}</span>
               </h2>
               <p className="text-xs text-slate-600 max-w-md mx-auto">
-                Thank you for submitting your boiler requirement. Our sales engineering team at Pune Works will review your specifications and issue a detailed proposal to your account dashboard within 4 business hours.
+                Thank you for submitting your boiler requirement. Our engineering team at Pandayji Iron Works (Thanagazi, Rajasthan) will review your specifications and contact you shortly.
               </p>
             </div>
 
@@ -135,13 +149,13 @@ function RequestQuoteContent() {
                 onClick={() => router.push('/account/quotes')}
                 className="px-6 py-3 bg-slate-900 text-white font-bold text-xs rounded-xl shadow hover:bg-slate-800 transition flex items-center gap-2"
               >
-                Track Quote in Account <ArrowRight className="w-4 h-4" />
+                Track Inquiry in Account <ArrowRight className="w-4 h-4" />
               </button>
               <button
                 onClick={() => setSubmitted(false)}
                 className="px-6 py-3 bg-slate-100 text-slate-800 font-semibold text-xs rounded-xl hover:bg-slate-200 transition"
               >
-                Submit Another RFQ
+                Submit Another Inquiry
               </button>
             </div>
           </div>
@@ -345,7 +359,7 @@ function RequestQuoteContent() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Attach Layout Drawing / Tender RFQ (Optional)</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Attach Layout Drawing / Tender Specs (Optional)</label>
                 <div className="flex items-center gap-3 bg-slate-50 p-3 rounded-xl border border-dashed border-slate-300">
                   <Upload className="w-5 h-5 text-slate-400" />
                   <input

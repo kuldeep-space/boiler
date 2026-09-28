@@ -261,7 +261,7 @@ export interface QuoteItem {
   notes?: string;
 }
 
-// ── Quote / RFQ ────────────────────────────────────────────
+// ── Quote / Inquiries ──────────────────────────────────────
 
 export interface Quote {
   id: string;

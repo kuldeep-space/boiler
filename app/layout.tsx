@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Pandey Ji Iron Works | Steam Boiler Manufacturer & Pan-India Boiler Supplier",
-  description: "Official B2B Portal of Pandey Ji Iron Works (Thanagazi, Rajasthan). Manufacturer of IBR 1950 Steam Boilers, Thermic Fluid Heaters, Water Softeners & Auxiliaries across India. Contact: 096804 29713.",
+  description: "Official B2B Portal of Pandey Ji Iron Works (Thanagazi, Rajasthan). Manufacturer of IBR 1950 Steam Boilers, Thermic Fluid Heaters, Water Softeners & Auxiliaries across India. Contact: 96804 29713.",
   keywords: "industrial boiler manufacturer, steam boiler India, IBR boiler, thermic fluid heater, Rajasthan boiler supplier",
   icons: {
     icon: [

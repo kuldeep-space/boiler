@@ -80,14 +80,13 @@ export const Header: React.FC = () => {
           {/* Desktop Search Bar */}
           <form onSubmit={handleSearchSubmit} className="hidden lg:flex items-center relative w-60 xl:w-72">
             <div
-              className="w-full flex items-center rounded-2xl overflow-hidden px-3 py-1.5 transition-all duration-200"
+              className="w-full flex items-center rounded-2xl overflow-hidden pl-3.5 pr-1.5 py-1.5 transition-all duration-200"
               style={{
                 backgroundColor: '#ffffff',
                 border: '1px solid rgba(183, 198, 194, 0.4)',
                 boxShadow: '0 4px 12px -2px rgba(23, 30, 25, 0.04)',
               }}
             >
-              <Search className="w-4 h-4 mr-2 flex-shrink-0" style={{ color: '#b7c6c2' }} />
               <input
                 type="text"
                 value={searchQuery}
@@ -98,10 +97,11 @@ export const Header: React.FC = () => {
               />
               <button
                 type="submit"
-                className="ml-1 px-2.5 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider text-white transition-all duration-200 hover:bg-[#a80010]"
+                aria-label="Search"
+                className="ml-1 p-1.5 rounded-xl text-white transition-all duration-200 hover:bg-[#a80010] flex items-center justify-center flex-shrink-0 cursor-pointer"
                 style={{ backgroundColor: '#ca0013' }}
               >
-                Go
+                <Search className="w-3.5 h-3.5" />
               </button>
             </div>
           </form>
@@ -186,10 +186,11 @@ export const Header: React.FC = () => {
             </div>
             <button
               type="submit"
-              className="px-4 py-2 rounded-2xl text-xs font-black uppercase text-white"
+              aria-label="Search"
+              className="p-2.5 rounded-2xl text-white flex items-center justify-center cursor-pointer"
               style={{ backgroundColor: '#ca0013' }}
             >
-              Search
+              <Search className="w-4 h-4" />
             </button>
           </form>
         </div>
@@ -227,7 +228,7 @@ export const Header: React.FC = () => {
               boxShadow: '0 4px 12px -2px rgba(202, 0, 19, 0.3)',
             }}
           >
-            Contact Factory
+            Contact Us
           </Link>
         </div>
       </nav>
@@ -261,7 +262,7 @@ export const Header: React.FC = () => {
             </div>
           </form>
 
-          <div className="grid grid-cols-2 gap-1.5 pb-2">
+          <div className="grid grid-cols-3 gap-1.5 pb-2">
             {[
               { href: '/', label: 'HOME' },
               { href: '/products', label: 'CATALOGUE' },
@@ -271,7 +272,7 @@ export const Header: React.FC = () => {
                 key={href}
                 href={href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="py-2.5 px-3 rounded-2xl font-black text-xs transition-colors hover:bg-[#eeebe3] text-[#171e19] flex items-center justify-between"
+                className="py-2.5 px-2 rounded-2xl font-black text-xs text-center transition-colors hover:bg-[#eeebe3] text-[#171e19]"
               >
                 <span>{label}</span>
               </Link>
@@ -279,21 +280,27 @@ export const Header: React.FC = () => {
           </div>
 
           <div className="pt-2 border-t border-[#b7c6c2]/20 space-y-2">
-            <a
-              href={`tel:${COMPANY_DETAILS.phone}`}
-              className="flex items-center justify-center gap-2 py-3 rounded-2xl font-black text-xs bg-[#eeebe3] text-[#171e19]"
-            >
-              <PhoneCall className="w-4 h-4 text-[#ca0013]" />
-              Call Factory: {COMPANY_DETAILS.phone}
-            </a>
+            <div className="flex flex-col gap-1.5 py-2.5 px-3 rounded-2xl bg-[#eeebe3] text-[#171e19] text-xs font-black">
+              <span className="text-[10px] uppercase font-bold text-slate-500">Call Us:</span>
+              <div className="flex items-center justify-around gap-2">
+                <a href={`tel:${COMPANY_DETAILS.phone}`} className="flex items-center gap-1 text-[#ca0013]">
+                  <PhoneCall className="w-3.5 h-3.5" />
+                  <span>{COMPANY_DETAILS.phone}</span>
+                </a>
+                <span className="text-slate-300">|</span>
+                <a href={`tel:${COMPANY_DETAILS.phone2}`} className="flex items-center gap-1 text-[#ca0013]">
+                  <span>{COMPANY_DETAILS.phone2}</span>
+                </a>
+              </div>
+            </div>
 
             <Link
-              href="/request-quote"
+              href="/contact"
               onClick={() => setMobileMenuOpen(false)}
               className="block py-3 text-center rounded-2xl font-black text-xs text-white"
               style={{ backgroundColor: '#ca0013' }}
             >
-              REQUEST CUSTOM QUOTATION
+              CONTACT US / INQUIRY
             </Link>
           </div>
         </div>

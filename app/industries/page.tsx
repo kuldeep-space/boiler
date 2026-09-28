@@ -43,8 +43,8 @@ export default function IndustriesPage() {
               <ind.icon className="w-8 h-8 text-amber-500" />
               <h3 className="font-extrabold text-slate-900 text-base">{ind.title}</h3>
               <p className="text-xs text-slate-600 leading-relaxed">{ind.desc}</p>
-              <Link href="/request-quote" className="text-xs font-bold text-sky-700 hover:underline flex items-center gap-1 pt-2">
-                Request Industry Proposal <ArrowRight className="w-3.5 h-3.5" />
+              <Link href="/contact" className="text-xs font-bold text-[#ca0013] hover:underline flex items-center gap-1 pt-2">
+                Inquire For This Industry <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
           ))}

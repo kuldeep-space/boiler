@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Header } from '../../components/layout/Header';
 import { Footer } from '../../components/layout/Footer';
 import { RoleSwitcher } from '../../components/layout/RoleSwitcher';
@@ -18,7 +19,7 @@ function PaymentGatewayContent() {
   const order = orders.find((o) => o.id === orderIdParam) || orders[0];
 
   const [paymentTab, setPaymentTab] = useState<'upi' | 'card' | 'netbanking' | 'neft'>('upi');
-  const [upiId, setUpiId] = useState('rajesh@okhdfcbank');
+  const [upiId, setUpiId] = useState('');
   const [processing, setProcessing] = useState(false);
 
   const formatPrice = (val?: number) => { val = val || 0;
@@ -30,6 +31,7 @@ function PaymentGatewayContent() {
   };
 
   const handleSimulatePaymentSuccess = () => {
+    if (!order) return;
     setProcessing(true);
     setTimeout(() => {
       const txId = `pay_RZP_${Math.floor(1000000000 + Math.random() * 9000000000)}`;
@@ -39,6 +41,23 @@ function PaymentGatewayContent() {
       router.push(`/order-confirmation/${order.id}`);
     }, 1500);
   };
+
+  if (!order) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
+        <RoleSwitcher />
+        <Header />
+        <main className="flex-1 max-w-xl mx-auto p-8 text-center flex flex-col items-center justify-center space-y-4">
+          <h2 className="text-xl font-bold text-slate-800">No Pending Order</h2>
+          <p className="text-slate-500 text-xs">There are no orders ready for payment right now.</p>
+          <Link href="/products" className="btn-primary px-5 py-2.5 text-xs font-bold uppercase tracking-wider">
+            Explore Catalog
+          </Link>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
