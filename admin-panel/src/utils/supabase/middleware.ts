@@ -31,12 +31,12 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (
-    !user &&
-    !request.nextUrl.pathname.startsWith('/login') &&
-    !request.nextUrl.pathname.startsWith('/auth')
-  ) {
-    // no user, potentially respond by redirecting the user to the login page
+  const pathname = request.nextUrl.pathname
+  const publicRoutes = ['/login', '/signup', '/forgot-password', '/reset-password', '/auth']
+  const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route))
+
+  if (!user && !isPublicRoute) {
+    // no user, redirect to login
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url)
