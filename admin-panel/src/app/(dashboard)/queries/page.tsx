@@ -55,7 +55,7 @@ export default function QueriesPage() {
               message: item.message,
               status: item.status || 'New',
               created_at: item.created_at,
-              product_name: item.products?.name
+              product_name: item.product_name || item.products?.name || 'General Boiler Inquiry'
             });
           });
         }
@@ -63,19 +63,22 @@ export default function QueriesPage() {
         console.warn('Could not fetch queries from Supabase:', err);
       }
 
-      // 2. Fetch from Synchronized Catalog API
-      try {
-        const res = await fetch('http://localhost:3000/api/catalog/queries');
-        if (res.ok) {
-          const apiQueries: QueryItem[] = await res.json();
-          apiQueries.forEach((q) => {
-            if (!combined.some((item) => item.id === q.id)) {
-              combined.push(q);
-            }
-          });
+      // 2. Fetch from Synchronized Catalog API if configured
+      const siteUrl = process.env.NEXT_PUBLIC_MAIN_SITE_URL || (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:3000' : '');
+      if (siteUrl) {
+        try {
+          const res = await fetch(`${siteUrl}/api/catalog/queries`);
+          if (res.ok) {
+            const apiQueries: QueryItem[] = await res.json();
+            apiQueries.forEach((q) => {
+              if (!combined.some((item) => item.id === q.id)) {
+                combined.push(q);
+              }
+            });
+          }
+        } catch (e) {
+          console.warn('API queries fetch skipped:', e);
         }
-      } catch (e) {
-        console.warn('API queries fetch skipped:', e);
       }
 
       setQueries(combined);
@@ -91,14 +94,17 @@ export default function QueriesPage() {
     );
 
     // Update via API
-    try {
-      await fetch('http://localhost:3000/api/catalog/queries', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, status: newStatus })
-      });
-    } catch {
-      // ignore
+    const siteUrl = process.env.NEXT_PUBLIC_MAIN_SITE_URL || (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:3000' : '');
+    if (siteUrl) {
+      try {
+        await fetch(`${siteUrl}/api/catalog/queries`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id, status: newStatus })
+        });
+      } catch {
+        // ignore
+      }
     }
 
     // Try Supabase

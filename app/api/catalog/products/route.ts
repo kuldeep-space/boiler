@@ -4,6 +4,32 @@ import path from 'path';
 import { supabase } from '@/lib/supabaseClient';
 
 const DATA_FILE = path.join(process.cwd(), 'data', 'products.json');
+const DELETED_FILE = path.join(process.cwd(), 'data', 'deleted_ids.json');
+
+function getDeletedIds(): string[] {
+  try {
+    if (!fs.existsSync(DELETED_FILE)) return [];
+    const content = fs.readFileSync(DELETED_FILE, 'utf8');
+    return JSON.parse(content || '[]');
+  } catch {
+    return [];
+  }
+}
+
+function saveDeletedId(id: string) {
+  try {
+    if (!fs.existsSync(path.dirname(DELETED_FILE))) {
+      fs.mkdirSync(path.dirname(DELETED_FILE), { recursive: true });
+    }
+    const list = getDeletedIds();
+    if (!list.includes(id)) {
+      list.push(id);
+      fs.writeFileSync(DELETED_FILE, JSON.stringify(list, null, 2), 'utf8');
+    }
+  } catch (err) {
+    console.error('Error saving deleted ID:', err);
+  }
+}
 
 function getLocalProducts(): any[] {
   try {
@@ -41,43 +67,55 @@ export async function OPTIONS() {
   return new NextResponse(null, { status: 204, headers: CORS_HEADERS });
 }
 
-export async function GET() {
-  const localProducts = getLocalProducts();
-  const allProducts: any[] = [...localProducts];
+export const dynamic = 'force-dynamic';
 
-  // Try fetching from Supabase if table is created
+export async function GET() {
+  try {
+    const allProducts: any[] = [];
+
+  // 1. Primary Source of Truth: Supabase Cloud Database
   try {
     const { data: dbProducts, error } = await supabase
       .from('products')
       .select('*, product_images(image_url)')
       .order('created_at', { ascending: false });
 
-    if (!error && dbProducts && dbProducts.length > 0) {
+    if (!error && dbProducts) {
       dbProducts.forEach((item: any) => {
         const imgs = item.product_images?.map((pi: any) => pi.image_url) || [];
-        const exists = allProducts.some((p) => p.id === item.id || p.name === item.name);
-        if (!exists) {
-          allProducts.push({
-            id: item.id,
-            name: item.name,
-            description: item.description,
-            price: item.price,
-            capacity: item.capacity,
-            specifications: item.specifications,
-            manufacturer: item.manufacturer,
-            show_call_now: item.show_call_now,
-            show_interested: item.show_interested,
-            images: imgs,
-            created_at: item.created_at,
-          });
-        }
+        allProducts.push({
+          id: item.id,
+          name: item.name,
+          description: item.description,
+          price: item.price,
+          capacity: item.capacity,
+          specifications: item.specifications,
+          manufacturer: item.manufacturer,
+          show_call_now: item.show_call_now,
+          show_interested: item.show_interested,
+          images: imgs,
+          created_at: item.created_at,
+        });
       });
+
+      const deletedIds = getDeletedIds();
+      const filteredProducts = allProducts.filter((p) => !deletedIds.includes(p.id) && !deletedIds.includes(p.name?.toLowerCase()));
+      return NextResponse.json(filteredProducts, { headers: CORS_HEADERS });
     }
   } catch (err) {
-    // Supabase table not created yet or offline
+    // Supabase offline fallback
   }
 
-  return NextResponse.json(allProducts, { headers: CORS_HEADERS });
+  // 2. Offline fallback to local persistent file only if Supabase errored
+  const localProducts = getLocalProducts();
+  const deletedIds = getDeletedIds();
+  const filteredProducts = localProducts.filter((p) => !deletedIds.includes(p.id) && !deletedIds.includes(p.name?.toLowerCase()));
+
+    return NextResponse.json(filteredProducts, { headers: CORS_HEADERS });
+  } catch (err: any) {
+    console.error('Fatal error in GET /api/catalog/products:', err);
+    return NextResponse.json([], { headers: CORS_HEADERS });
+  }
 }
 
 export async function POST(req: NextRequest) {
@@ -223,12 +261,15 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: 'Missing product ID' }, { status: 400, headers: CORS_HEADERS });
     }
 
-    // Remove from local persistent JSON
+    // 1. Record ID in deleted list so it never resurrects
+    saveDeletedId(id);
+
+    // 2. Remove from local persistent JSON
     const localProducts = getLocalProducts();
-    const updated = localProducts.filter((p) => p.id !== id);
+    const updated = localProducts.filter((p) => p.id !== id && p.name?.toLowerCase() !== id.toLowerCase());
     saveLocalProducts(updated);
 
-    // Attempt remove from Supabase
+    // 3. Remove from Supabase
     try {
       await supabase.from('products').delete().eq('id', id);
     } catch {

@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS public.product_images (
 CREATE TABLE IF NOT EXISTS public.queries (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     product_id UUID REFERENCES public.products(id) ON DELETE SET NULL,
+    product_name TEXT,
     customer_name TEXT NOT NULL,
     customer_email TEXT,
     customer_phone TEXT NOT NULL,
@@ -38,6 +39,9 @@ CREATE TABLE IF NOT EXISTS public.queries (
     status TEXT DEFAULT 'New' CHECK (status IN ('New', 'Contacted', 'Resolved', 'Spam')),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
+
+-- Ensure product_name exists if table was previously created
+ALTER TABLE public.queries ADD COLUMN IF NOT EXISTS product_name TEXT;
 
 -- 4. Enable Row Level Security (RLS)
 ALTER TABLE public.products ENABLE ROW LEVEL SECURITY;

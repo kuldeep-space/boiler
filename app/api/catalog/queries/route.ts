@@ -64,7 +64,7 @@ export async function GET() {
             message: item.message,
             status: item.status || 'New',
             created_at: item.created_at,
-            product_name: item.products?.name,
+            product_name: item.product_name || item.products?.name || 'General Inquiry',
           });
         }
       });
@@ -99,13 +99,15 @@ export async function POST(req: NextRequest) {
 
     // 2. Try Supabase
     try {
+      const isUuid = Boolean(newQuery.product_id && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(newQuery.product_id));
       await supabase.from('queries').insert({
         customer_name: newQuery.customer_name,
         customer_phone: newQuery.customer_phone,
         customer_email: newQuery.customer_email,
         message: newQuery.message,
         status: 'New',
-        product_id: newQuery.product_id,
+        product_name: newQuery.product_name,
+        product_id: isUuid ? newQuery.product_id : null,
       });
     } catch {
       // Supabase table not ready

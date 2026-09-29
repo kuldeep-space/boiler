@@ -38,34 +38,37 @@ export default function DashboardPage() {
         // ignore
       }
 
-      // 2. Fetch from Synchronized Catalog API
-      try {
-        const res = await fetch('http://localhost:3000/api/catalog/products');
-        if (res.ok) {
-          const apiProducts = await res.json();
-          if (Array.isArray(apiProducts)) {
-            apiProducts.forEach((ap) => {
-              if (!allProducts.some((p) => p.id === ap.id || p.name === ap.name)) {
-                allProducts.push(ap);
-              }
-            });
+      // 2. Fetch from Synchronized Catalog API if configured
+      const siteUrl = process.env.NEXT_PUBLIC_MAIN_SITE_URL || (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:3000' : '');
+      if (siteUrl) {
+        try {
+          const res = await fetch(`${siteUrl}/api/catalog/products`);
+          if (res.ok) {
+            const apiProducts = await res.json();
+            if (Array.isArray(apiProducts)) {
+              apiProducts.forEach((ap) => {
+                if (!allProducts.some((p) => p.id === ap.id || p.name === ap.name)) {
+                  allProducts.push(ap);
+                }
+              });
+            }
           }
+        } catch {
+          // ignore
         }
-      } catch {
-        // ignore
-      }
 
-      // 3. Fetch from Synchronized Queries API
-      try {
-        const resQ = await fetch('http://localhost:3000/api/catalog/queries');
-        if (resQ.ok) {
-          const apiQueries = await resQ.json();
-          if (Array.isArray(apiQueries) && apiQueries.length > totalQueries) {
-            totalQueries = apiQueries.length;
+        // 3. Fetch from Synchronized Queries API
+        try {
+          const resQ = await fetch(`${siteUrl}/api/catalog/queries`);
+          if (resQ.ok) {
+            const apiQueries = await resQ.json();
+            if (Array.isArray(apiQueries) && apiQueries.length > totalQueries) {
+              totalQueries = apiQueries.length;
+            }
           }
+        } catch {
+          // ignore
         }
-      } catch {
-        // ignore
       }
 
       // 4. Local storage fallback

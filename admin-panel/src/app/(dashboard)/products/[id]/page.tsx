@@ -114,6 +114,8 @@ export default function EditProductPage() {
   const [loading, setLoading] = useState(false);
   const [statusMessage, setStatusMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   // Load existing product
   useEffect(() => {
@@ -367,6 +369,70 @@ export default function EditProductPage() {
     }
   };
 
+  const handleDeleteProduct = async () => {
+    setDeleting(true);
+    setErrorMessage('');
+    try {
+      // 1. Delete from Supabase Database
+      const supabase = createClient();
+      await supabase.from('products').delete().eq('id', productId);
+
+      // 2. Delete images from Supabase Storage
+      if (images && images.length > 0) {
+        const filePaths = images
+          .map((img) => {
+            const match = img.url.match(/product-images\/(.+)$/);
+            return match ? match[1] : null;
+          })
+          .filter(Boolean) as string[];
+
+        if (filePaths.length > 0) {
+          await supabase.storage.from('product-images').remove(filePaths);
+        }
+      }
+
+      // 3. Delete from localStorage
+      if (typeof window !== 'undefined') {
+        const localKey = 'pandayji_catalog_products';
+        const existing = JSON.parse(localStorage.getItem(localKey) || '[]');
+        const updated = existing.filter((p: any) => p.id !== productId && p.name !== name);
+        localStorage.setItem(localKey, JSON.stringify(updated));
+
+        // Also clean main website store cache if on same origin
+        const storeKey = 'pandayji_iron_works_store_v2';
+        const mainStore = localStorage.getItem(storeKey);
+        if (mainStore) {
+          const parsedStore = JSON.parse(mainStore);
+          if (parsedStore.products) {
+            parsedStore.products = parsedStore.products.filter((p: any) => p.id !== productId && p.name !== name);
+            localStorage.setItem(storeKey, JSON.stringify(parsedStore));
+          }
+        }
+      }
+
+      // 4. Notify Main Website API
+      const deleteSiteUrl = process.env.NEXT_PUBLIC_MAIN_SITE_URL || (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:3000' : '');
+      if (deleteSiteUrl) {
+        try {
+          await fetch(`${deleteSiteUrl}/api/catalog/products?id=${productId}`, {
+            method: 'DELETE'
+          });
+        } catch {
+          // ignore
+        }
+      }
+
+      setStatusMessage('Product deleted everywhere successfully!');
+      setTimeout(() => {
+        window.location.href = '/products';
+      }, 500);
+    } catch (err) {
+      console.error('Failed to delete product:', err);
+      setErrorMessage('Failed to delete product. Please try again.');
+      setDeleting(false);
+    }
+  };
+
   if (fetching) {
     return (
       <div className="p-16 text-center max-w-5xl mx-auto space-y-4">
@@ -398,6 +464,39 @@ export default function EditProductPage() {
               Modify boiler details, photos, or tabular technical specifications.
             </p>
           </div>
+        </div>
+
+        {/* Delete Action Button */}
+        <div className="flex items-center gap-2">
+          {deleteConfirm ? (
+            <div className="flex items-center gap-1.5 bg-red-50 p-1.5 rounded-xl border border-red-200 animate-fade-in">
+              <span className="text-xs text-red-700 font-bold px-2">Delete completely?</span>
+              <button
+                type="button"
+                onClick={handleDeleteProduct}
+                disabled={deleting}
+                className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-black rounded-lg transition-all cursor-pointer disabled:opacity-50"
+              >
+                {deleting ? 'Deleting...' : 'Confirm Delete'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setDeleteConfirm(false)}
+                className="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition-all cursor-pointer"
+              >
+                Cancel
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setDeleteConfirm(true)}
+              className="flex items-center gap-1.5 px-4 py-2.5 bg-white hover:bg-red-50 border border-slate-200 hover:border-red-200 text-slate-600 hover:text-red-600 rounded-xl text-xs font-bold transition-all shadow-sm cursor-pointer"
+            >
+              <Trash2 className="w-4 h-4 text-red-500" />
+              <span>Delete Product</span>
+            </button>
+          )}
         </div>
       </div>
 

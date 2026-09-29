@@ -117,18 +117,63 @@ export default function ProductsPage() {
 
   // Handle Delete
   const handleDelete = async (id: string) => {
+    const prodToDelete = products.find((p) => p.id === id);
     const updated = products.filter((p) => p.id !== id);
     setProducts(updated);
 
+    // 1. Delete from local storage
     if (typeof window !== 'undefined') {
-      const localData = localStorage.getItem('pandayji_catalog_products');
-      if (localData) {
-        const parsed: ProductItem[] = JSON.parse(localData);
-        const filtered = parsed.filter((p) => p.id !== id);
-        localStorage.setItem('pandayji_catalog_products', JSON.stringify(filtered));
+      try {
+        const localData = localStorage.getItem('pandayji_catalog_products');
+        if (localData) {
+          const parsed: ProductItem[] = JSON.parse(localData);
+          const filtered = parsed.filter((p) => p.id !== id);
+          localStorage.setItem('pandayji_catalog_products', JSON.stringify(filtered));
+        }
+
+        // Also clean main website store cache if on same origin
+        const storeKey = 'pandayji_iron_works_store_v2';
+        const mainStore = localStorage.getItem(storeKey);
+        if (mainStore) {
+          const parsedStore = JSON.parse(mainStore);
+          if (parsedStore.products) {
+            parsedStore.products = parsedStore.products.filter((p: any) => p.id !== id && p.name !== prodToDelete?.name);
+            localStorage.setItem(storeKey, JSON.stringify(parsedStore));
+          }
+        }
+      } catch {
+        // ignore
       }
     }
 
+    // 2. Delete from Supabase Database
+    try {
+      const supabase = createClient();
+      await supabase.from('products').delete().eq('id', id);
+    } catch {
+      // ignore
+    }
+
+    // 3. Delete associated photos from Supabase Storage
+    try {
+      if (prodToDelete?.images && prodToDelete.images.length > 0) {
+        const filePaths = prodToDelete.images
+          .map((url) => {
+            const match = url.match(/product-images\/(.+)$/);
+            return match ? match[1] : null;
+          })
+          .filter(Boolean) as string[];
+
+        if (filePaths.length > 0) {
+          const supabase = createClient();
+          await supabase.storage.from('product-images').remove(filePaths);
+        }
+      }
+    } catch {
+      // ignore
+    }
+
+    // 4. Notify Main Website API to delete and record tombstone
     const deleteSiteUrl = process.env.NEXT_PUBLIC_MAIN_SITE_URL || (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:3000' : '');
     if (deleteSiteUrl) {
       try {
@@ -138,13 +183,6 @@ export default function ProductsPage() {
       } catch {
         // ignore
       }
-    }
-
-    try {
-      const supabase = createClient();
-      await supabase.from('products').delete().eq('id', id);
-    } catch {
-      // ignore
     }
 
     setDeleteConfirmId(null);

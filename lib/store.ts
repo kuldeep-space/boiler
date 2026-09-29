@@ -102,6 +102,7 @@ export function useAppStore() {
     async function syncCatalog() {
       try {
         let apiProducts: any[] = [];
+        let fetchedSuccessfully = false;
 
         // 1. Direct real-time fetch from Supabase
         try {
@@ -110,7 +111,8 @@ export function useAppStore() {
             .select('*, product_images(image_url)')
             .order('created_at', { ascending: false });
 
-          if (!dbErr && dbProducts && dbProducts.length > 0) {
+          if (!dbErr && dbProducts) {
+            fetchedSuccessfully = true;
             apiProducts = dbProducts.map((p: any) => ({
               ...p,
               images: p.product_images?.map((pi: any) => pi.image_url) || []
@@ -120,75 +122,85 @@ export function useAppStore() {
           // fallback to api route
         }
 
-        // 2. Fallback to API route if direct DB returned nothing
-        if (apiProducts.length === 0) {
+        // 2. Fallback to API route if direct DB failed
+        if (!fetchedSuccessfully) {
           try {
             const res = await fetch('/api/catalog/products');
             if (res.ok) {
               apiProducts = await res.json();
+              fetchedSuccessfully = true;
             }
           } catch {}
         }
 
-        if (Array.isArray(apiProducts) && apiProducts.length > 0) {
+        if (fetchedSuccessfully && Array.isArray(apiProducts)) {
           const customProducts = apiProducts.map((item) => {
-              const slug = item.slug || (item.name ? item.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') : String(item.id));
-              const img = (item.images && item.images.length > 0) ? item.images[0] : (item.image || 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80');
-              const gallery = (item.images && item.images.length > 0) ? item.images : [img];
-              let parsedSpecs: { key: string; value: string }[] = [];
-              try {
-                if (typeof item.specifications === 'string') {
-                  parsedSpecs = JSON.parse(item.specifications);
-                } else if (Array.isArray(item.specifications)) {
-                  parsedSpecs = item.specifications;
-                }
-              } catch {}
+            const slug = item.slug || (item.name ? item.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') : String(item.id));
+            const img = (item.images && item.images.length > 0) ? item.images[0] : (item.image || 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80');
+            const gallery = (item.images && item.images.length > 0) ? item.images : [img];
+            let parsedSpecs: { key: string; value: string }[] = [];
+            try {
+              if (typeof item.specifications === 'string') {
+                parsedSpecs = JSON.parse(item.specifications);
+              } else if (Array.isArray(item.specifications)) {
+                parsedSpecs = item.specifications;
+              }
+            } catch {}
 
-              const findSpec = (k: string) => parsedSpecs.find((s) => s && s.key && s.key.toLowerCase().includes(k.toLowerCase()))?.value || '';
+            const findSpec = (k: string) => parsedSpecs.find((s) => s && s.key && s.key.toLowerCase().includes(k.toLowerCase()))?.value || '';
 
-              const capacity = item.capacity || findSpec('capacity') || '';
-              const pressure = item.pressure || findSpec('pressure') || '';
-              const fuelType = item.fuelType || item.fuel_type || findSpec('fuel') || '';
-              const material = item.material || findSpec('material') || '';
+            const capacity = item.capacity || findSpec('capacity') || '';
+            const pressure = item.pressure || findSpec('pressure') || '';
+            const fuelType = item.fuelType || item.fuel_type || findSpec('fuel') || '';
+            const material = item.material || findSpec('material') || '';
 
-              return {
-                id: String(item.id),
-                slug,
-                sku: item.sku || ('PJIW-' + String(item.id).slice(-6).toUpperCase()),
-                name: item.name,
-                shortDescription: item.description ? item.description.slice(0, 140) + '...' : '',
-                description: item.description || '',
-                categoryId: item.categoryId || 'cat-steam-boilers',
-                categoryName: item.categoryName || 'Industrial Steam Boilers',
-                brand: item.manufacturer || 'Pandayji Iron Works',
-                mode: (item.mode || 'direct') as 'direct' | 'quote',
-                status: 'published' as const,
-                availability: 'in_stock' as const,
-                image: img,
-                gallery,
-                capacity,
-                pressure,
-                fuelType,
-                material,
-                specifications: item.specifications || '',
-                price: Number(item.price) || 0,
-                hsnCode: '84021100',
-                gstRate: 18,
-                freightMode: 'fixed' as const,
-                show_call_now: item.show_call_now ?? true,
-                show_interested: item.show_interested ?? true,
-                createdAt: item.created_at || new Date().toISOString(),
-              };
-            });
+            return {
+              id: String(item.id),
+              slug,
+              sku: item.sku || ('PJIW-' + String(item.id).slice(-6).toUpperCase()),
+              name: item.name,
+              shortDescription: item.description ? item.description.slice(0, 140) + '...' : '',
+              description: item.description || '',
+              categoryId: item.categoryId || 'cat-steam-boilers',
+              categoryName: item.categoryName || 'Industrial Steam Boilers',
+              brand: item.manufacturer || 'Pandayji Iron Works',
+              mode: (item.mode || 'direct') as 'direct' | 'quote',
+              status: 'published' as const,
+              availability: 'in_stock' as const,
+              image: img,
+              gallery,
+              capacity,
+              pressure,
+              fuelType,
+              material,
+              specifications: item.specifications || '',
+              price: Number(item.price) || 0,
+              hsnCode: '84021100',
+              gstRate: 18,
+              freightMode: 'fixed' as const,
+              show_call_now: item.show_call_now ?? true,
+              show_interested: item.show_interested ?? true,
+              createdAt: item.created_at || new Date().toISOString(),
+            };
+          });
 
-            // Put newly added custom products first, then standard INITIAL_PRODUCTS
-            const combined = [
-              ...customProducts,
-              ...INITIAL_PRODUCTS.filter(ip => !customProducts.some(cp => cp.name.toLowerCase() === ip.name.toLowerCase() || cp.id === ip.id))
-            ];
+          // Combined: custom products first + remaining standard products
+          const combined = [
+            ...customProducts,
+            ...INITIAL_PRODUCTS.filter(ip => !customProducts.some(cp => cp.name.toLowerCase() === ip.name.toLowerCase() || cp.id === ip.id))
+          ];
 
-            saveState({ ...memoryState, products: combined });
-          }
+          // Auto-remove deleted items from cart and wishlist so user never sees orphaned deleted products
+          const validIds = new Set(combined.map(p => p.id));
+          const cleanedCart = (memoryState.cart || []).filter(c => validIds.has(c.product.id));
+          const cleanedWishlist = (memoryState.wishlist || []).filter(wId => validIds.has(wId));
+
+          saveState({
+            ...memoryState,
+            products: combined,
+            cart: cleanedCart,
+            wishlist: cleanedWishlist
+          });
         }
       } catch (err) {
         console.warn('Could not auto-fetch catalog:', err);
