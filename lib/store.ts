@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { supabase } from './supabaseClient';
 import { Product, Category, CartItem, UserProfile, Order, Quote, Coupon, HSNConfig, FreightZoneRule, OrderStatus, PaymentStatus, QuoteStatus } from './types';
 import { INITIAL_CATEGORIES, INITIAL_PRODUCTS, INITIAL_USER, INITIAL_ORDERS, INITIAL_QUOTES, INITIAL_COUPONS, INITIAL_HSN_CONFIGS, INITIAL_FREIGHT_ZONES } from './sampleData';
 
@@ -100,11 +101,37 @@ export function useAppStore() {
 
     async function syncCatalog() {
       try {
-        const res = await fetch('/api/catalog/products');
-        if (res.ok) {
-          const apiProducts = await res.json();
-          if (Array.isArray(apiProducts) && apiProducts.length > 0) {
-            const customProducts = apiProducts.map((item) => {
+        let apiProducts: any[] = [];
+
+        // 1. Direct real-time fetch from Supabase
+        try {
+          const { data: dbProducts, error: dbErr } = await supabase
+            .from('products')
+            .select('*, product_images(image_url)')
+            .order('created_at', { ascending: false });
+
+          if (!dbErr && dbProducts && dbProducts.length > 0) {
+            apiProducts = dbProducts.map((p: any) => ({
+              ...p,
+              images: p.product_images?.map((pi: any) => pi.image_url) || []
+            }));
+          }
+        } catch {
+          // fallback to api route
+        }
+
+        // 2. Fallback to API route if direct DB returned nothing
+        if (apiProducts.length === 0) {
+          try {
+            const res = await fetch('/api/catalog/products');
+            if (res.ok) {
+              apiProducts = await res.json();
+            }
+          } catch {}
+        }
+
+        if (Array.isArray(apiProducts) && apiProducts.length > 0) {
+          const customProducts = apiProducts.map((item) => {
               const slug = item.slug || (item.name ? item.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') : String(item.id));
               const img = (item.images && item.images.length > 0) ? item.images[0] : (item.image || 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80');
               const gallery = (item.images && item.images.length > 0) ? item.images : [img];

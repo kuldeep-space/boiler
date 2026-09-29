@@ -73,19 +73,22 @@ export default function ProductsPage() {
         console.warn('Supabase products fetch skipped/failed:', e);
       }
 
-      // 2. Fetch from Main Website Synchronized API
-      try {
-        const res = await fetch('http://localhost:3000/api/catalog/products');
-        if (res.ok) {
-          const apiProducts: ProductItem[] = await res.json();
-          apiProducts.forEach((apiItem) => {
-            if (!allProducts.some((p) => p.id === apiItem.id || p.name === apiItem.name)) {
-              allProducts.push(apiItem);
-            }
-          });
+      // 2. Fetch from Main Website Synchronized API if configured
+      const siteUrl = process.env.NEXT_PUBLIC_MAIN_SITE_URL || (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:3000' : '');
+      if (siteUrl) {
+        try {
+          const res = await fetch(`${siteUrl}/api/catalog/products`);
+          if (res.ok) {
+            const apiProducts: ProductItem[] = await res.json();
+            apiProducts.forEach((apiItem) => {
+              if (!allProducts.some((p) => p.id === apiItem.id || p.name === apiItem.name)) {
+                allProducts.push(apiItem);
+              }
+            });
+          }
+        } catch (e) {
+          console.warn('API sync fetch skipped/failed:', e);
         }
-      } catch (e) {
-        console.warn('API sync fetch skipped/failed:', e);
       }
 
       // 3. Fallback LocalStorage
@@ -126,12 +129,15 @@ export default function ProductsPage() {
       }
     }
 
-    try {
-      await fetch(`http://localhost:3000/api/catalog/products?id=${id}`, {
-        method: 'DELETE'
-      });
-    } catch {
-      // ignore
+    const deleteSiteUrl = process.env.NEXT_PUBLIC_MAIN_SITE_URL || (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:3000' : '');
+    if (deleteSiteUrl) {
+      try {
+        await fetch(`${deleteSiteUrl}/api/catalog/products?id=${id}`, {
+          method: 'DELETE'
+        });
+      } catch {
+        // ignore
+      }
     }
 
     try {

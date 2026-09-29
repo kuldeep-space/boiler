@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { Header } from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
@@ -29,12 +29,9 @@ import {
 } from 'lucide-react';
 
 export default function HomePage() {
-  const { products, categories } = useAppStore();
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const { products } = useAppStore();
 
-  const featuredProducts = products
-    .filter((p) => selectedCategory === 'all' || p.categoryId === selectedCategory)
-    .slice(0, 6);
+  const featuredProducts = products.slice(0, 6);
 
   const INDUSTRIES = [
     { name: 'Textile Processing',  desc: 'Dyeing & Stenters',               icon: Factory },
@@ -281,90 +278,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ════════════════════════════════════════════════════
-            § 2 — HORIZONTAL SCROLL SELECTOR
-            Touch-scrollable with snap points
-            ════════════════════════════════════════════════════ */}
-        <section className="px-3 sm:px-4 py-2 sm:py-4 max-w-7xl mx-auto">
 
-          <div className="flex items-center gap-2.5 sm:gap-3 overflow-x-auto pb-2 pt-1 scrollbar-none snap-x -webkit-overflow-scrolling-touch">
-            {/* 'All' button */}
-            <button
-              onClick={() => setSelectedCategory('all')}
-              className="snap-start flex-shrink-0 transition-all duration-200"
-            >
-              {selectedCategory === 'all' ? (
-                <div
-                  className="h-12 sm:h-14 px-3 sm:px-4 rounded-full flex items-center gap-2.5 sm:gap-3 shadow-md"
-                  style={{
-                    backgroundColor: '#171e19',
-                    minWidth: '140px',
-                  }}
-                >
-                  <div
-                    className="w-8 sm:w-10 h-8 sm:h-10 rounded-full flex items-center justify-center text-white font-black text-xs"
-                    style={{ backgroundColor: '#ca0013' }}
-                  >
-                    All
-                  </div>
-                  <div className="text-left pr-2">
-                    <span className="block text-xs font-black text-white">All Models</span>
-                    <span className="block text-[8px] sm:text-[9px] uppercase tracking-wider text-[#b7c6c2]">Active</span>
-                  </div>
-                </div>
-              ) : (
-                <div
-                  className="w-12 sm:w-14 h-12 sm:h-14 rounded-2xl flex items-center justify-center bg-white shadow-sm hover:border-[#171e19]"
-                  style={{
-                    borderRadius: '16px',
-                    border: '1px solid rgba(183, 198, 194, 0.4)',
-                  }}
-                  title="View All"
-                >
-                  <Layers className="w-5 h-5 text-[#171e19]" />
-                </div>
-              )}
-            </button>
-
-            {/* Category Items */}
-            {categories.map((cat) => {
-              const isActive = selectedCategory === cat.id;
-              return (
-                <button
-                  key={cat.id}
-                  onClick={() => setSelectedCategory(cat.id)}
-                  className="snap-start flex-shrink-0 transition-all duration-200"
-                >
-                  {isActive ? (
-                    <div
-                      className="h-10 sm:h-11 px-3 sm:px-4 rounded-full flex items-center gap-2 shadow-md"
-                      style={{
-                        backgroundColor: '#171e19',
-                      }}
-                    >
-                      <div
-                        className="w-5 h-5 rounded-full flex items-center justify-center text-white font-black text-[10px] flex-shrink-0"
-                        style={{ backgroundColor: '#ca0013' }}
-                      >
-                        {cat.productCount || '✓'}
-                      </div>
-                      <span className="text-xs font-black text-white whitespace-nowrap">{cat.name}</span>
-                    </div>
-                  ) : (
-                    <div
-                      className="h-10 sm:h-11 px-3 sm:px-4 rounded-full flex items-center justify-center bg-white shadow-sm"
-                      style={{
-                        border: '1px solid rgba(183, 198, 194, 0.4)',
-                      }}
-                    >
-                      <span className="text-xs font-bold text-[#171e19] whitespace-nowrap">{cat.name}</span>
-                    </div>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </section>
 
         {/* ════════════════════════════════════════════════════
             § 3 — FEATURED EQUIPMENT (Responsive Grid)

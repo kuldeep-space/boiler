@@ -143,14 +143,17 @@ export default function EditProductPage() {
 
       // 2. Try Catalog API
       if (!found) {
-        try {
-          const res = await fetch('http://localhost:3000/api/catalog/products');
-          if (res.ok) {
-            const list = await res.json();
-            found = list.find((p: any) => p.id === productId || p.slug === productId);
+        const editSiteUrl = process.env.NEXT_PUBLIC_MAIN_SITE_URL || (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:3000' : '');
+        if (editSiteUrl) {
+          try {
+            const res = await fetch(`${editSiteUrl}/api/catalog/products`);
+            if (res.ok) {
+              const list = await res.json();
+              found = list.find((p: any) => p.id === productId || p.slug === productId);
+            }
+          } catch (err) {
+            console.warn('API fetch error:', err);
           }
-        } catch (err) {
-          console.warn('API fetch error:', err);
         }
       }
 
