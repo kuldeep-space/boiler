@@ -262,63 +262,50 @@ export default function AddProductPage() {
 
       setStatusMessage('Saving product to database & synchronized catalog...');
 
-      // 1. Send to Main Website Shared Catalog API
-      try {
-        await fetch('http://localhost:3000/api/catalog/products', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(productPayload)
-        });
-      } catch (apiErr) {
-        console.warn('Direct API sync note:', apiErr);
+      // 1. Save directly to Supabase Database (Primary Cloud Source of Truth)
+      const { data: insertedProduct, error: dbError } = await supabase
+        .from('products')
+        .insert({
+          name: productPayload.name,
+          description: productPayload.description,
+          price: productPayload.price,
+          capacity: productPayload.capacity,
+          specifications: productPayload.specifications,
+          manufacturer: productPayload.manufacturer,
+          show_call_now: productPayload.show_call_now,
+          show_interested: productPayload.show_interested
+        })
+        .select()
+        .single();
+
+      if (dbError) {
+        setLoading(false);
+        setErrorMessage(`Supabase Error (${dbError.code || 'DB'}): ${dbError.message}. Please run the schema SQL in your Supabase SQL Editor to create the 'products' table.`);
+        return;
       }
 
-      // 2. Try Supabase Database directly
-      let savedToSupabase = false;
-      try {
-        const { data: insertedProduct, error: dbError } = await supabase
-          .from('products')
-          .insert({
-            name: productPayload.name,
-            description: productPayload.description,
-            price: productPayload.price,
-            capacity: productPayload.capacity,
-            specifications: productPayload.specifications,
-            manufacturer: productPayload.manufacturer,
-            show_call_now: productPayload.show_call_now,
-            show_interested: productPayload.show_interested
-          })
-          .select()
-          .single();
-
-        if (!dbError && insertedProduct) {
-          savedToSupabase = true;
-          if (finalImageUrls.length > 0) {
-            const imgRows = finalImageUrls.map((url) => ({
-              product_id: insertedProduct.id,
-              image_url: url
-            }));
-            await supabase.from('product_images').insert(imgRows);
-          }
-        }
-      } catch (err) {
-        console.warn('Supabase DB insert note:', err);
+      if (insertedProduct && finalImageUrls.length > 0) {
+        const imgRows = finalImageUrls.map((url) => ({
+          product_id: insertedProduct.id,
+          image_url: url
+        }));
+        await supabase.from('product_images').insert(imgRows);
       }
 
-      // 3. Backup to localStorage
+      // 2. Backup to localStorage for instant local view
       if (typeof window !== 'undefined') {
         const localKey = 'pandayji_catalog_products';
         const existing = JSON.parse(localStorage.getItem(localKey) || '[]');
         const localProduct = {
-          id: 'prod_' + Date.now(),
+          id: insertedProduct?.id || ('prod_' + Date.now()),
           ...productPayload,
-          isLocal: !savedToSupabase
+          isLocal: false
         };
         existing.unshift(localProduct);
         localStorage.setItem(localKey, JSON.stringify(existing));
       }
 
-      setStatusMessage('Product published successfully!');
+      setStatusMessage('Product published to Supabase successfully!');
       setTimeout(() => {
         router.push('/products');
       }, 700);

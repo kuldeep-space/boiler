@@ -103,13 +103,13 @@ export function useAppStore() {
         const res = await fetch('/api/catalog/products');
         if (res.ok) {
           const apiProducts = await res.json();
-          if (Array.isArray(apiProducts)) {
-            const mapped = apiProducts.map((item) => {
-              const slug = item.slug || (item.name ? item.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') : item.id);
+          if (Array.isArray(apiProducts) && apiProducts.length > 0) {
+            const customProducts = apiProducts.map((item) => {
+              const slug = item.slug || (item.name ? item.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') : String(item.id));
               const img = (item.images && item.images.length > 0) ? item.images[0] : (item.image || 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80');
               const gallery = (item.images && item.images.length > 0) ? item.images : [img];
               return {
-                id: item.id,
+                id: String(item.id),
                 slug,
                 sku: item.sku || ('PJIW-' + String(item.id).slice(-6).toUpperCase()),
                 name: item.name,
@@ -138,9 +138,13 @@ export function useAppStore() {
               };
             });
 
-            if (JSON.stringify(memoryState.products) !== JSON.stringify(mapped)) {
-              saveState({ ...memoryState, products: mapped });
-            }
+            // Put newly added custom products first, then standard INITIAL_PRODUCTS
+            const combined = [
+              ...customProducts,
+              ...INITIAL_PRODUCTS.filter(ip => !customProducts.some(cp => cp.name.toLowerCase() === ip.name.toLowerCase() || cp.id === ip.id))
+            ];
+
+            saveState({ ...memoryState, products: combined });
           }
         }
       } catch (err) {
