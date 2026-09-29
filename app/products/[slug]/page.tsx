@@ -70,14 +70,32 @@ export default function ProductDetailPage() {
 
   const formatPrice = (val?: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(val || 0);
   const dynamicSpecs = parseTechnicalSpecifications(product.specifications);
-  const tableRows = [
-    { key: 'Manufacturer / Brand', value: 'Pandayji Iron Works (Est. 2019, Pratapgarh Road, Thanagazi, Rajasthan 301022)' },
+
+  // Cleanly construct table rows only with real values, avoiding hardcoded fake defaults
+  const hasSpec = (keyName: string) => dynamicSpecs.some(s => s.key.toLowerCase().includes(keyName.toLowerCase()));
+
+  const baseRows: SpecItem[] = [
+    { key: 'Manufacturer / Brand', value: product.brand || 'Pandayji Iron Works (Thanagazi, Rajasthan)' },
     { key: 'Model Name / Type', value: product.name },
-    { key: 'Rated Steam Capacity', value: product.capacity || 'Standard / Variable' },
-    { key: 'Working Pressure', value: product.pressure || '6 - 20 PSI (Non-IBR)' },
-    { key: 'Primary Fuel', value: product.fuelType || 'Wood, Sawdust, Biomass' },
-    ...dynamicSpecs,
   ];
+
+  if (product.capacity && !hasSpec('capacity')) {
+    baseRows.push({ key: 'Rated Steam Capacity', value: product.capacity });
+  }
+
+  if (product.pressure && !hasSpec('pressure')) {
+    baseRows.push({ key: 'Working Pressure', value: product.pressure });
+  }
+
+  if (product.fuelType && !hasSpec('fuel')) {
+    baseRows.push({ key: 'Primary Fuel', value: product.fuelType });
+  }
+
+  if (product.material && !hasSpec('material')) {
+    baseRows.push({ key: 'Material', value: product.material });
+  }
+
+  const tableRows = [...baseRows, ...dynamicSpecs];
 
   const handleInquirySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -158,14 +176,26 @@ export default function ProductDetailPage() {
                 <p className="text-[11px] font-mono" style={{ color: '#6B7280' }}>+ 18% GST Applicable. Transport as per location.</p>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 p-3" style={{ backgroundColor: 'rgba(238,235,227,0.7)', borderRadius: '16px', border: '1px solid rgba(183,198,194,0.3)' }}>
-                {[{ label: 'Capacity', value: product.capacity || 'Standard' }, { label: 'Pressure', value: product.pressure || '6-20 PSI' }, { label: 'Fuel', value: product.fuelType || 'Wood' }, { label: 'Brand', value: 'Pandayji' }].map(({ label, value }) => (
-                  <div key={label} className="text-xs">
-                    <span className="text-[10px] uppercase font-bold block" style={{ color: '#b7c6c2' }}>{label}</span>
-                    <strong className="font-mono font-black truncate block" style={{ color: '#171e19' }}>{value}</strong>
+              {/* Dynamic Quick Specs Badges */}
+              {(() => {
+                const badges: { label: string; value: string }[] = [];
+                if (product.capacity) badges.push({ label: 'Capacity', value: product.capacity });
+                if (product.pressure) badges.push({ label: 'Pressure', value: product.pressure });
+                if (product.fuelType) badges.push({ label: 'Fuel', value: product.fuelType });
+                if (product.material) badges.push({ label: 'Material', value: product.material });
+                badges.push({ label: 'Brand', value: product.brand || 'Pandayji' });
+
+                return (
+                  <div className={`grid gap-2.5 p-3 grid-cols-2 ${badges.length >= 4 ? 'sm:grid-cols-4' : badges.length === 3 ? 'sm:grid-cols-3' : 'sm:grid-cols-2'}`} style={{ backgroundColor: 'rgba(238,235,227,0.7)', borderRadius: '16px', border: '1px solid rgba(183,198,194,0.3)' }}>
+                    {badges.map(({ label, value }) => (
+                      <div key={label} className="text-xs">
+                        <span className="text-[10px] uppercase font-bold block" style={{ color: '#b7c6c2' }}>{label}</span>
+                        <strong className="font-mono font-black truncate block" style={{ color: '#171e19' }}>{value}</strong>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                );
+              })()}
             </div>
 
             <div className="space-y-3 pt-4" style={{ borderTop: '1px solid rgba(183,198,194,0.3)' }}>
@@ -225,7 +255,14 @@ export default function ProductDetailPage() {
             <div className="space-y-4">
               <h3 className="font-bold text-base" style={{ color: '#171e19' }}>Key Design Features</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {['Heavy gauge stainless steel or high-tensile mild steel construction', 'Optimized heating chamber for wood sawdust and biomass fuel efficiency', 'Precision safety valve and pressure gauge fittings', 'Low maintenance design with simple ash removal and soot cleaning ports', 'Tested under hydraulic pressure before factory dispatch', 'Engineered by Pandayji Iron Works (Est. 2019) for continuous Indian dairy and plant operations'].map((feat, idx) => (
+                {(product.features && product.features.length > 0 ? product.features : [
+                  'Heavy gauge stainless steel or high-tensile mild steel construction',
+                  'Optimized heating chamber & thermal efficiency engineered for heavy continuous duty',
+                  'Precision industrial safety fittings and calibrated monitoring instruments',
+                  'Low maintenance engineering with accessible inspection, maintenance, and cleaning points',
+                  'Hydraulically pressure tested & quality verified prior to factory dispatch',
+                  'Engineered by Pandayji Iron Works (Est. 2019) for Indian dairy and industrial processing plants'
+                ]).map((feat, idx) => (
                   <div key={idx} className="p-3.5 flex items-start gap-2.5 text-xs" style={{ backgroundColor: 'rgba(238,235,227,0.6)', borderRadius: '14px', border: '1px solid rgba(183,198,194,0.3)' }}>
                     <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" style={{ color: '#ca0013' }} />
                     <span className="font-medium" style={{ color: '#171e19' }}>{feat}</span>

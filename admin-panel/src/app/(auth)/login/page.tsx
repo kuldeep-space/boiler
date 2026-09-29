@@ -90,6 +90,18 @@ export default async function LoginPage({
             </div>
           </div>
 
+          <div className="flex items-center justify-between text-xs text-slate-400">
+            <label className="flex items-center gap-2 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                name="remember"
+                defaultChecked
+                className="w-4 h-4 rounded border-slate-700 bg-slate-800 text-[#ca0013] focus:ring-[#ca0013] accent-[#ca0013] cursor-pointer"
+              />
+              <span className="font-medium text-slate-300">Remember this device (Stay signed in)</span>
+            </label>
+          </div>
+
           <button
             formAction={login}
             type="submit"

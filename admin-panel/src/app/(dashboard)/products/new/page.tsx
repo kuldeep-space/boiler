@@ -307,7 +307,7 @@ export default function AddProductPage() {
 
       setStatusMessage('Product published to Supabase successfully!');
       setTimeout(() => {
-        router.push('/products');
+        window.location.href = '/products';
       }, 700);
 
     } catch (err: unknown) {

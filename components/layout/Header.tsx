@@ -123,7 +123,7 @@ export const Header: React.FC = () => {
 
           {/* Wishlist */}
           <Link
-            href="/account/wishlist"
+            href="/wishlist"
             className="relative p-2 sm:p-2.5 rounded-2xl transition-all duration-200 hover:-translate-y-0.5"
             title="Wishlist"
             style={{

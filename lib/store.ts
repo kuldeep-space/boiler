@@ -108,6 +108,22 @@ export function useAppStore() {
               const slug = item.slug || (item.name ? item.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') : String(item.id));
               const img = (item.images && item.images.length > 0) ? item.images[0] : (item.image || 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80');
               const gallery = (item.images && item.images.length > 0) ? item.images : [img];
+              let parsedSpecs: { key: string; value: string }[] = [];
+              try {
+                if (typeof item.specifications === 'string') {
+                  parsedSpecs = JSON.parse(item.specifications);
+                } else if (Array.isArray(item.specifications)) {
+                  parsedSpecs = item.specifications;
+                }
+              } catch {}
+
+              const findSpec = (k: string) => parsedSpecs.find((s) => s && s.key && s.key.toLowerCase().includes(k.toLowerCase()))?.value || '';
+
+              const capacity = item.capacity || findSpec('capacity') || '';
+              const pressure = item.pressure || findSpec('pressure') || '';
+              const fuelType = item.fuelType || item.fuel_type || findSpec('fuel') || '';
+              const material = item.material || findSpec('material') || '';
+
               return {
                 id: String(item.id),
                 slug,
@@ -123,10 +139,10 @@ export function useAppStore() {
                 availability: 'in_stock' as const,
                 image: img,
                 gallery,
-                capacity: item.capacity || 'Standard',
-                pressure: '6-20 PSI',
-                fuelType: 'Wood Sawdust Fired',
-                material: 'Stainless Steel / Mild Steel',
+                capacity,
+                pressure,
+                fuelType,
+                material,
                 specifications: item.specifications || '',
                 price: Number(item.price) || 0,
                 hsnCode: '84021100',
